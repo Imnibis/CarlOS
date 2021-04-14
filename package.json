@@ -1,0 +1,15 @@
+{
+  "name": "CarlOS",
+  "version": "1.0.0",
+  "description": "Juste CarlOS",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "repository": "git@github.com:Imnibis/CarlOS.git",
+  "author": "Imnibis <imnibis@outlook.fr>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
+}
