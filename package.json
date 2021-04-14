@@ -10,6 +10,10 @@
   "author": "Imnibis <imnibis@outlook.fr>",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.39"
   }
 }
