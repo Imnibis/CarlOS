@@ -1,6 +1,10 @@
+import Command from "./command";
+
 class CommandManager
 {
-    static registerCommand(client, command)
+    static command: Command[] = []
+
+    static registerSlashCommand(client, command)
     {
         client.guilds.cache.array().forEach((guild) => {
             client.api.applications(client.user.id).guilds(guild.id)
