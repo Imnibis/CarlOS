@@ -1,36 +1,64 @@
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord-api-types";
+import { Client } from "discord.js";
+import { pipeline } from "stream";
+import CommandPing from "../commands/CommandPing";
 import Command from "./command";
 
 class CommandManager
 {
-    static command: Command[] = []
+    static commands: Command[] = []
+    static client: Client;
 
-    static registerSlashCommand(client, command)
+    static init(client: Client)
     {
-        client.guilds.cache.array().forEach((guild) => {
-            client.api.applications(client.user.id).guilds(guild.id)
-                .commands.post({
-                    data: command
-                });
+        this.client = client;
+
+        const ping = new CommandPing();
+
+        this.putCommands();
+    }
+    
+    static registerCommand(command: Command) : void
+    {
+        this.commands.push(command);
+    }
+
+    static putCommands() : void
+    {
+        if (this.client == undefined)
+            throw new Error("A client needs to be assigned before you can register a command.");
+        let apiCommands = [];
+        this.commands.forEach(command => {
+            apiCommands.push(command.apiObject);
+        });
+        const rest = new REST({version: '9'}).setToken(this.client.token);
+        this.client.guilds.cache.forEach((guild) => {
+            (async () => {
+                try {
+                    await rest.put(
+                        Routes.applicationGuildCommands(this.client.user.id, guild.id),
+                        {body: apiCommands}
+                    );
+                } catch (error) {
+                    console.log(error);
+                }
+            })
         })
     }
 
-    static handleInteractionEvent(client)
+    static handleInteractionEvent() : void
     {
-        client.ws.on('INTERACTION_CREATE', async interaction => {
-            const command = interaction.data.name.toLowerCase();
-            const args = interaction.data.options;
-
-            if (command === 'ping') {
-                client.api.interactions(interaction.id, interaction.token).callback.post({
-                    data: {
-                        type: 4,
-                        data: {
-                            content: "pong"
-                        }
-                    }
-                })
-            }
-        })
+        this.client.on("interactionCreate", interaction => {
+            if (!interaction.isCommand())
+                return;
+            const commandName = interaction.command.name.toLowerCase();
+            
+            this.commands.forEach(command => {
+                if (command.apiObject.name === commandName)
+                    command.run(this.client, interaction);
+            })
+        });
     }
 }
 
