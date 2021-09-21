@@ -37,7 +37,7 @@ class CommandManager
             (async () => {
                 try {
                     await rest.put(
-                        Routes.applicationGuildCommands(this.client.user.id, guild.id),
+                        Routes.applicationGuildCommands(this.client.application.id, guild.id),
                         {body: apiCommands}
                     );
                 } catch (error) {
