@@ -38,8 +38,8 @@ class CommandManager
         this.client.guilds.cache.forEach((guild) => {
             (async () => {
                 try {
-                    console.log(this.client.application.id)
-                    console.log(guild.id)
+                    console.log("Application ID: " + this.client.application.id)
+                    console.log("Guild ID: " + guild.id)
                     /*await rest.put(
                         Routes.applicationGuildCommands(),
                         {body: apiCommands}
