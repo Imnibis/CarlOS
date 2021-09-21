@@ -38,12 +38,12 @@ class CommandManager
         this.client.guilds.cache.forEach((guild) => {
             (async () => {
                 try {
-                    console.log("Application ID: " + this.client.application.id)
-                    console.log("Guild ID: " + guild.id)
-                    /*await rest.put(
-                        Routes.applicationGuildCommands(),
+                    const appID = this.client.application.id;
+                    const guildID = guild.id;
+                    await rest.put(
+                        Routes.applicationGuildCommands(appID, guildID),
                         {body: apiCommands}
-                    );*/
+                    );
                 } catch (error) {
                     console.log(error);
                 }
