@@ -47,7 +47,7 @@ class CommandManager
                 } catch (error) {
                     console.log(error);
                 }
-            })
+            })();
         })
     }
 
