@@ -11,9 +11,7 @@ class Command
     constructor(name: string, description: string)
     {
         console.log(`Registering ${name} command...`);
-        this.apiObject.name = name;
-        this.apiObject.description = description;
-        this.apiObject.options = [];
+        this.apiObject = {name: name, description: description, options: []};
     }
 
     addArgument(name: string, description: string, type: ArgType, required: boolean,
