@@ -36,10 +36,12 @@ class CommandManager
         this.client.guilds.cache.forEach((guild) => {
             (async () => {
                 try {
-                    await rest.put(
-                        Routes.applicationGuildCommands(this.client.application.id, guild.id),
+                    console.log(this.client.application.id)
+                    console.log(guild.id)
+                    /*await rest.put(
+                        Routes.applicationGuildCommands(),
                         {body: apiCommands}
-                    );
+                    );*/
                 } catch (error) {
                     console.log(error);
                 }
