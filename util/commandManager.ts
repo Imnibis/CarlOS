@@ -26,8 +26,10 @@ class CommandManager
 
     static putCommands() : void
     {
-        if (this.client == undefined)
+        if (this.client === undefined) {
             throw new Error("A client needs to be assigned before you can register a command.");
+        }
+        console.log("Sending commands to Discord...");
         let apiCommands = [];
         this.commands.forEach(command => {
             apiCommands.push(command.apiObject);
