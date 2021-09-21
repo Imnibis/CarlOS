@@ -42,7 +42,7 @@ class CommandManager
                     const guildID = guild.id;
                     await rest.put(
                         Routes.applicationGuildCommands(appID, guildID),
-                        {body: apiCommands}
+                        {body: apiCommands},
                     );
                 } catch (error) {
                     console.log(error);
