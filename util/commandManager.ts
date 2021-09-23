@@ -3,6 +3,7 @@ import { Routes } from "discord-api-types/v9";
 import { Client } from "discord.js";
 import { pipeline } from "stream";
 import CommandPing from "../commands/CommandPing";
+import CommandPlay from "../commands/CommandPlay";
 import Command from "./command";
 
 class CommandManager
@@ -15,6 +16,7 @@ class CommandManager
         this.client = client;
 
         const ping = new CommandPing();
+        const play = new CommandPlay();
 
         this.putCommands();
     }
