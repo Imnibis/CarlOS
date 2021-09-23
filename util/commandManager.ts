@@ -1,5 +1,5 @@
 import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types";
+import { Routes } from "discord-api-types/v9";
 import { Client } from "discord.js";
 import { pipeline } from "stream";
 import CommandPing from "../commands/CommandPing";
