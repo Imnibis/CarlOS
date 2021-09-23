@@ -5,13 +5,15 @@ import { pipeline } from "stream";
 import CommandPing from "../commands/CommandPing";
 import CommandPlay from "../commands/CommandPlay";
 import Command from "./command";
+import Database from "./database";
 
 class CommandManager
 {
     static commands: Command[] = []
     static client: Client;
+    static db: Database;
 
-    static init(client: Client)
+    static init(client: Client, db: Database)
     {
         this.client = client;
 
@@ -59,7 +61,7 @@ class CommandManager
             
             this.commands.forEach(command => {
                 if (command.apiObject.name === commandName)
-                    command.run(this.client, interaction);
+                    command.run(this.client, this.db, interaction);
             })
         });
     }

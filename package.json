@@ -18,7 +18,7 @@
     "mysql": "^2.18.1",
     "sodium": "^3.0.2",
     "youtube-audio-stream": "^0.3.21",
-    "youtube-search-without-api-key": "^1.0.6"
+    "youtube-search": "^1.1.6"
   },
   "devDependencies": {
     "@types/node": "^16.9.6"

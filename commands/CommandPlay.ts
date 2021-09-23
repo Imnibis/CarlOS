@@ -1,7 +1,9 @@
 import { Client, CommandInteraction } from "discord.js";
 import ArgType from "../util/argtype";
 import Command from "../util/command";
-import * as yt from "youtube-search-without-api-key";
+import * as youtubeSearch from "youtube-search";
+import Database from "../util/database";
+import { InteractionResponseType } from "discord-api-types";
 
 class CommandPlay extends Command
 {
@@ -12,28 +14,36 @@ class CommandPlay extends Command
         this.register();
     }
 
-    run(client: Client, interaction: CommandInteraction)
+    run(client: Client, db: Database, interaction: CommandInteraction)
     {
-        super.run(client, interaction);
+        super.run(client, db, interaction);
         const input_string = interaction.options.getString("musique", true);
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
-        let searchQuery = "";
+        let videoID = "";
         
         if (regexResult !== null)
-            searchQuery = regexResult[5];
-        else
-            searchQuery = input_string;
-        console.log("Search query: " + searchQuery);
-        (async () => {
-            const searchResult = await yt.search(searchQuery);
-
-            console.log(searchResult);
-            if (searchResult.length !== 0)
-                interaction.reply(searchResult[0].title);
-            else
-                interaction.reply("Aucun résultat.");
-        })();
+            interaction.reply("https://www.youtube.com/watch?v=" + regexResult[5]);
+        else {
+            const searchQuery = input_string;
+            db.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
+                let opts: youtubeSearch.YouTubeSearchOptions = {
+                    maxResults: 10,
+                    key: key
+                };
+                youtubeSearch(searchQuery, opts, (err, results) => {
+                    if (err) {
+                        interaction.reply(err.message);
+                        return;
+                    }
+                    if (results.length === 0)
+                        interaction.reply("Aucun resultat.");
+                    else
+                        interaction.reply(results[0].link);
+                })
+            });
+        }
+        
     }
 }
 

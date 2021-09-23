@@ -1,6 +1,7 @@
 import { ApplicationCommandOption, Client, CommandInteraction, CommandInteractionOptionResolver, Interaction } from "discord.js";
 import ArgType from "./argtype";
 import CommandManager from "./commandManager";
+import Database from "./database";
 
 class Command
 {
@@ -25,7 +26,7 @@ class Command
                 "choices": choices, "type": type, "required": required});
     }
 
-    run(client: Client, interaction: CommandInteraction)
+    run(client: Client, db: Database, interaction: CommandInteraction)
     {
         const author = interaction.member.user;
         console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName}`);

@@ -19,7 +19,7 @@ class Bot
     onReady() {
         console.log(`Logged in as ${this.client.user.tag}`);
         console.log(`Registering commands...`);
-        CommandManager.init(this.client);
+        CommandManager.init(this.client, this.db);
         CommandManager.handleInteractionEvent();
     }
 }

@@ -1,6 +1,7 @@
 import { Client, CommandInteraction, CommandInteractionOptionResolver, Interaction } from "discord.js";
 import ArgType from "../util/argtype";
 import Command from "../util/command";
+import Database from "../util/database";
 
 class CommandPing extends Command
 {
@@ -11,9 +12,9 @@ class CommandPing extends Command
         this.register();
     }
 
-    run(client: Client, interaction: CommandInteraction)
+    run(client: Client, db: Database, interaction: CommandInteraction)
     {
-        super.run(client, interaction);
+        super.run(client, db, interaction);
         let arg = interaction.options.getString("my_arg", false);
         if (arg !== null)
             interaction.reply(`Pong ! ${arg}`);
