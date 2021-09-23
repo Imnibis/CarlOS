@@ -40,8 +40,7 @@ class CommandManager
                 try {
                     const appID = this.client.application.id;
                     const guildID = guild.id;
-                    const route: `/${string}` = Routes.applicationGuildCommands(appID, guildID);
-                    await rest.put(route, {body: apiCommands},);
+                    await rest.put(Routes.applicationGuildCommands(appID, guildID), {body: apiCommands},);
                 } catch (error) {
                     console.log(error);
                 }

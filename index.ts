@@ -20,6 +20,7 @@ class Bot
         console.log(`Logged in as ${this.client.user.tag}`);
         console.log(`Registering commands...`);
         CommandManager.init(this.client);
+        CommandManager.handleInteractionEvent();
     }
 }
 
