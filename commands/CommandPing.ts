@@ -15,7 +15,7 @@ class CommandPing extends Command
     {
         super.run(client, interaction);
         let arg = interaction.options.getString("my_arg", false);
-        if (arg !== undefined)
+        if (arg !== null)
             interaction.reply(`Pong ! ${arg}`);
         else interaction.reply("Pong !");
     }
