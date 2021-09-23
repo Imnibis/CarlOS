@@ -28,7 +28,7 @@ class Command
     run(client: Client, interaction: CommandInteraction)
     {
         const author = interaction.member.user;
-        console.log(`${author.username}#${author.discriminator} used command ${interaction.command.name}`);
+        console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName}`);
     }
 
     register()
