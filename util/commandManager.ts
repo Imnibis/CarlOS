@@ -16,6 +16,7 @@ class CommandManager
     static init(client: Client, db: Database)
     {
         this.client = client;
+        this.db = db;
 
         const ping = new CommandPing();
         const play = new CommandPlay();
