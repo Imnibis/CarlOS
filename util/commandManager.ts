@@ -53,7 +53,7 @@ class CommandManager
         this.client.on("interactionCreate", interaction => {
             if (!interaction.isCommand())
                 return;
-            const commandName = interaction.command.name.toLowerCase();
+            const commandName = interaction.commandName;
             
             this.commands.forEach(command => {
                 if (command.apiObject.name === commandName)
