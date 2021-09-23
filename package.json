@@ -15,7 +15,9 @@
     "@discordjs/voice": "^0.6.0",
     "discord-api-types": "^0.23.1",
     "discord.js": "^13.1.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "sodium": "^3.0.2",
+    "youtube-audio-stream": "^0.3.21"
   },
   "devDependencies": {
     "@types/node": "^16.9.6"
