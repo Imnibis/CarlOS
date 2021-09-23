@@ -24,6 +24,7 @@ class CommandPlay extends Command
             searchQuery = regexResult[5];
         else
             searchQuery = input_string;
+        console.log("Search query: " + searchQuery);
         (async () => {
             const searchResult = await yt.search(searchQuery);
 
