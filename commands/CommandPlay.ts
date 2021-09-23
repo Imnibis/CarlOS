@@ -28,6 +28,7 @@ class CommandPlay extends Command
         (async () => {
             const searchResult = await yt.search(searchQuery);
 
+            console.log(searchResult);
             if (searchResult.length !== 0)
                 interaction.reply(searchResult[0].title);
             else
