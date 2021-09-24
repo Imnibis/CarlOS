@@ -26,7 +26,7 @@ class Command
                 "choices": choices, "type": type, "required": required});
     }
 
-    run(client: Client, db: Database, interaction: CommandInteraction)
+    run(client: Client, interaction: CommandInteraction)
     {
         const author = interaction.member.user;
         console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName}`);

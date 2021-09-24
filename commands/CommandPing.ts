@@ -12,9 +12,9 @@ class CommandPing extends Command
         this.register();
     }
 
-    run(client: Client, db: Database, interaction: CommandInteraction)
+    run(client: Client, interaction: CommandInteraction)
     {
-        super.run(client, db, interaction);
+        super.run(client, interaction);
         let arg = interaction.options.getString("my_arg", false);
         if (arg !== null)
             interaction.reply(`Pong ! ${arg}`);

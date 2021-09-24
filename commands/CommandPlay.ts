@@ -3,10 +3,6 @@ import ArgType from "../util/argtype";
 import Command from "../util/command";
 import * as youtubeSearch from "youtube-search";
 import Database from "../util/database";
-import * as YoutubeDL from "ytdl-core";
-import FFmpeg from "fluent-ffmpeg";
-import { PassThrough } from "stream";
-import * as fs from "fs";
 
 class CommandPlay extends Command
 {
@@ -17,9 +13,9 @@ class CommandPlay extends Command
         this.register();
     }
 
-    run(client: Client, db: Database, interaction: CommandInteraction)
+    run(client: Client, interaction: CommandInteraction)
     {
-        super.run(client, db, interaction);
+        super.run(client, interaction);
         const input_string = interaction.options.getString("musique", true);
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
@@ -29,7 +25,7 @@ class CommandPlay extends Command
             interaction.reply("https://www.youtube.com/watch?v=" + regexResult[5]);
         else {
             const searchQuery = input_string;
-            db.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
+            Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
                 let opts: youtubeSearch.YouTubeSearchOptions = {
                     maxResults: 10,
                     key: key

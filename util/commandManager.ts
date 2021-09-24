@@ -13,10 +13,9 @@ class CommandManager
     static client: Client;
     static db: Database;
 
-    static init(client: Client, db: Database)
+    static init(client: Client)
     {
         this.client = client;
-        this.db = db;
 
         const ping = new CommandPing();
         const play = new CommandPlay();
@@ -62,7 +61,7 @@ class CommandManager
             
             this.commands.forEach(command => {
                 if (command.apiObject.name === commandName)
-                    command.run(this.client, this.db, interaction);
+                    command.run(this.client, interaction);
             })
         });
     }
