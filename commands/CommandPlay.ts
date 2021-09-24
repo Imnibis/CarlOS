@@ -3,7 +3,10 @@ import ArgType from "../util/argtype";
 import Command from "../util/command";
 import * as youtubeSearch from "youtube-search";
 import Database from "../util/database";
-import { InteractionResponseType } from "discord-api-types";
+import * as YoutubeDL from "ytdl-core";
+import FFmpeg from "fluent-ffmpeg";
+import { PassThrough } from "stream";
+import * as fs from "fs";
 
 class CommandPlay extends Command
 {
@@ -43,6 +46,7 @@ class CommandPlay extends Command
                 })
             });
         }
+        
         
     }
 }
