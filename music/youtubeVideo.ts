@@ -36,16 +36,17 @@ class YoutubeVideo
                         this.exists = false;
                         resolve();
                     } else {
+                        let video = res[0];
                         this.exists = true;
-                        this.title = res.snippet.title;
-                        this.description = res.snippet.description;
-                        this.thumbnail = res.snippet.thumbnails.maxres.url;
-                        this.duration = res.contentDetails.duration;
-                        this.channelId = res.snippet.channelId;
-                        this.channelTitle = res.snippet.channelTitle;
-                        youtube.getChannelById([res.snippet.channelId], (err, chan) => {
+                        this.title = video.snippet.title;
+                        this.description = video.snippet.description;
+                        this.thumbnail = video.snippet.thumbnails.maxres.url;
+                        this.duration = video.contentDetails.duration;
+                        this.channelId = video.snippet.channelId;
+                        this.channelTitle = video.snippet.channelTitle;
+                        youtube.getChannelById([video.snippet.channelId], (err, chan) => {
                             if (err) this.channelPicture = "";
-                            else this.channelPicture = chan.snippet.thumbnails.high.url;
+                            else this.channelPicture = chan[0].snippet.thumbnails.high.url;
                             resolve();
                         });
                     }

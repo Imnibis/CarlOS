@@ -30,8 +30,7 @@ class CommandPlay extends Command
                         .setColor("#ff0000")
                         .setTitle("Erreur")
                         .setDescription("Vidéo introuvable")
-                        .setTimestamp()
-                        .setFooter("CarlOS v0.1 BETA", client.user.avatarURL());
+                        .setFooter(client.user.username, client.user.avatarURL());
                     interaction.reply({embeds:[embed]});
                 } else {
                     const embed = new MessageEmbed()
@@ -42,8 +41,7 @@ class CommandPlay extends Command
                         .setAuthor(video.channelTitle, video.channelPicture,
                             `https://www.youtube.com/channel/${video.channelId}`)
                         .setThumbnail(video.thumbnail)
-                        .setTimestamp()
-                        .setFooter("CarlOS v0.1 BETA", client.user.avatarURL());
+                        .setFooter(client.user.username, client.user.avatarURL());
                 }
             });
         });
