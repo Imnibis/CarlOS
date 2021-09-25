@@ -1,6 +1,6 @@
 import request = require("request");
 import youtubeSearch = require("youtube-search");
-import YouTube from "ytube-api";
+import YouTube = require("ytube-api");
 import Database from "../util/database";
 
 class YoutubeVideo
