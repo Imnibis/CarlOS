@@ -1,43 +1,60 @@
-import * as request from "request";
+import request = require("request");
 import youtubeSearch = require("youtube-search");
-import yt = require("youtube.get-video-info");
+import YouTube from "ytube-api";
 import Database from "../util/database";
 
 class YoutubeVideo
 {
     id: string;
-    name: string;
+    title: string;
     description: string;
     thumbnail: string;
-    duration: number;
+    duration: string;
+    channelId: string;
+    channelTitle: string;
+    channelPicture: string;
+    exists: boolean;
+    ready: Promise<void>;
 
     constructor(videoID: string)
     {
         this.id = videoID;
-        this.name = null;
+        this.title = null;
         this.description = null;
         this.thumbnail = null;
         this.duration = null;
-        this.exists().then(videoExists => {
-            if (videoExists) {
-                yt.retrieve(videoID, (err, res) => {
-                    if (err) throw err;
-                    console.log(res);
-                })
-            }
-        });
-    }
-
-    exists() : Promise<boolean>
-    {
-        return new Promise((resolve, reject) => {
-            request.get(`https://img.youtube.com/vi/${this.id}/0.jpg`, (err, res, body) => {
-                resolve(res.statusCode === 200);
+        this.channelId = null;
+        this.channelTitle = null;
+        this.channelPicture = null;
+        this.exists = false;
+        this.ready = new Promise((resolve, reject) => {
+            const youtube = new YouTube();
+            Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
+                youtube.setKey(key);
+                youtube.getById([videoID], (err, res) => {
+                    if (err) {
+                        this.exists = false;
+                        resolve();
+                    } else {
+                        this.exists = true;
+                        this.title = res.snippet.title;
+                        this.description = res.snippet.description;
+                        this.thumbnail = res.snippet.thumbnails.maxres.url;
+                        this.duration = res.contentDetails.duration;
+                        this.channelId = res.snippet.channelId;
+                        this.channelTitle = res.snippet.channelTitle;
+                        youtube.getChannelById([res.snippet.channelId], (err, chan) => {
+                            if (err) this.channelPicture = "";
+                            else this.channelPicture = chan.snippet.thumbnails.high.url;
+                            resolve();
+                        });
+                    }
+                });
             });
         });
     }
 
-    static searchVideo(searchQuery: string) : Promise<YoutubeVideo>
+    static search(searchQuery: string) : Promise<YoutubeVideo>
     {
         return new Promise((resolve, reject) => {
             Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {

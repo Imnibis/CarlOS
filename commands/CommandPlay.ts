@@ -1,8 +1,9 @@
-import { Client, CommandInteraction } from "discord.js";
+import { Client, CommandInteraction, MessageEmbed } from "discord.js";
 import ArgType from "../util/argtype";
 import Command from "../util/command";
 import * as youtubeSearch from "youtube-search";
 import Database from "../util/database";
+import YoutubeVideo from "../music/youtubeVideo";
 
 class CommandPlay extends Command
 {
@@ -19,31 +20,33 @@ class CommandPlay extends Command
         const input_string = interaction.options.getString("musique", true);
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
-        let videoID = "";
-        
-        if (regexResult !== null)
-            interaction.reply("https://www.youtube.com/watch?v=" + regexResult[5]);
-        else {
-            const searchQuery = input_string;
-            Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
-                let opts: youtubeSearch.YouTubeSearchOptions = {
-                    maxResults: 10,
-                    key: key
-                };
-                youtubeSearch(searchQuery, opts, (err, results) => {
-                    if (err) {
-                        interaction.reply(err.message);
-                        return;
-                    }
-                    if (results.length === 0)
-                        interaction.reply("Aucun resultat.");
-                    else
-                        interaction.reply(results[0].link);
-                })
+        new Promise<YoutubeVideo>((resolve, reject) => {
+            if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
+            else YoutubeVideo.search(input_string).then(resolve);
+        }).then(video => {
+            video.ready.then(() => {
+                if (!video.exists) {
+                    const embed = new MessageEmbed()
+                        .setColor("#ff0000")
+                        .setTitle("Erreur")
+                        .setDescription("Vidéo introuvable")
+                        .setTimestamp()
+                        .setFooter("CarlOS v0.1 BETA", client.user.avatarURL());
+                    interaction.reply({embeds:[embed]});
+                } else {
+                    const embed = new MessageEmbed()
+                        .setColor("#ff0000")
+                        .setTitle(video.title)
+                        .setURL(`https://www.youtube.com/watch?v=${video.id}`)
+                        .setDescription(video.duration)
+                        .setAuthor(video.channelTitle, video.channelPicture,
+                            `https://www.youtube.com/channel/${video.channelId}`)
+                        .setThumbnail(video.thumbnail)
+                        .setTimestamp()
+                        .setFooter("CarlOS v0.1 BETA", client.user.avatarURL());
+                }
             });
-        }
-        
-        
+        });
     }
 }
 
