@@ -36,8 +36,7 @@ class YoutubeVideo
                         this.exists = false;
                         resolve();
                     } else {
-                        console.log(JSON.stringify(res, null, 2));
-                        let video = res[0];
+                        let video = res.items;
                         this.exists = true;
                         this.title = video.snippet.title;
                         this.description = video.snippet.description;
@@ -47,7 +46,7 @@ class YoutubeVideo
                         this.channelTitle = video.snippet.channelTitle;
                         youtube.getChannelById([video.snippet.channelId], (err, chan) => {
                             if (err) this.channelPicture = "";
-                            else this.channelPicture = chan[0].snippet.thumbnails.high.url;
+                            else this.channelPicture = chan.items.snippet.thumbnails.high.url;
                             resolve();
                         });
                     }
