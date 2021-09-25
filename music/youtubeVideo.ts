@@ -36,6 +36,7 @@ class YoutubeVideo
                         this.exists = false;
                         resolve();
                     } else {
+                        console.log(JSON.stringify(res, null, 2));
                         let video = res[0];
                         this.exists = true;
                         this.title = video.snippet.title;
