@@ -16,7 +16,6 @@ class Database
         Database.instance.query("CREATE TABLE IF NOT EXISTS `ranks` ( `id` int(11) NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, `defaultRank` tinyint(1) NOT NULL DEFAULT '0', PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 		Database.instance.query("CREATE TABLE IF NOT EXISTS `settings` ( `id` int(11) NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, `value` text NOT NULL, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
 		Database.instance.query("CREATE TABLE IF NOT EXISTS `users` ( `id` int(11) NOT NULL AUTO_INCREMENT, `uid` varchar(255) NOT NULL, `username` varchar(255) NOT NULL, `rank` int(11) NOT NULL, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
-        Database.instance = this;
     }
 
     static getSetting(setting: string, defaultValue: string = null): Promise<string>
