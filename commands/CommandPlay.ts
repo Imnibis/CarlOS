@@ -4,6 +4,7 @@ import Command from "../util/command";
 import * as youtubeSearch from "youtube-search";
 import Database from "../util/database";
 import YoutubeVideo from "../music/youtubeVideo";
+import { InteractionResponseType } from "discord-api-types";
 
 class CommandPlay extends Command
 {
@@ -26,7 +27,6 @@ class CommandPlay extends Command
         }).then(video => {
             video.ready.then(() => {
                 if (!video.exists) {
-                    console.log("4")
                     const embed = new MessageEmbed()
                         .setColor("#ff0000")
                         .setTitle("Erreur")
@@ -34,7 +34,6 @@ class CommandPlay extends Command
                         .setFooter(client.user.username, client.user.avatarURL());
                     interaction.reply({embeds:[embed]});
                 } else {
-                    console.log("5")
                     const embed = new MessageEmbed()
                         .setColor("#ff0000")
                         .setTitle(video.title)
@@ -44,6 +43,7 @@ class CommandPlay extends Command
                             `https://www.youtube.com/channel/${video.channelId}`)
                         .setThumbnail(video.thumbnail)
                         .setFooter(client.user.username, client.user.avatarURL());
+                    interaction.reply({embeds:[embed]});
                 }
             });
         });
