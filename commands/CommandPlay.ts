@@ -26,6 +26,7 @@ class CommandPlay extends Command
         }).then(video => {
             video.ready.then(() => {
                 if (!video.exists) {
+                    console.log("4")
                     const embed = new MessageEmbed()
                         .setColor("#ff0000")
                         .setTitle("Erreur")
@@ -33,6 +34,7 @@ class CommandPlay extends Command
                         .setFooter(client.user.username, client.user.avatarURL());
                     interaction.reply({embeds:[embed]});
                 } else {
+                    console.log("5")
                     const embed = new MessageEmbed()
                         .setColor("#ff0000")
                         .setTitle(video.title)

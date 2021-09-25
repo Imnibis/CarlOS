@@ -44,9 +44,12 @@ class YoutubeVideo
                         this.duration = video.contentDetails.duration;
                         this.channelId = video.snippet.channelId;
                         this.channelTitle = video.snippet.channelTitle;
+                        console.log("1")
                         youtube.getChannelById([video.snippet.channelId], (err, chan) => {
+                            console.log("2")
                             if (err) this.channelPicture = "";
                             else this.channelPicture = chan.items[0].snippet.thumbnails.high.url;
+                            console.log("3")
                             resolve();
                         });
                     }
