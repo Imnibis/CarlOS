@@ -2,7 +2,6 @@ import { Client, Guild, Intents } from "discord.js"
 import Database from "./util/database"
 import * as settings from "./settings.json"
 import CommandManager from "./util/commandManager"
-
 class Bot
 {
     client: Client

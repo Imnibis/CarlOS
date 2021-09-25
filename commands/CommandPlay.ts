@@ -5,7 +5,10 @@ import * as youtubeSearch from "youtube-search";
 import Database from "../util/database";
 import YoutubeVideo from "../music/youtubeVideo";
 import { InteractionResponseType } from "discord-api-types";
+import moment = require("moment");
+import mdfSetup = require("moment-duration-format");
 
+mdfSetup(moment);
 class CommandPlay extends Command
 {
     constructor() 
@@ -34,11 +37,14 @@ class CommandPlay extends Command
                         .setFooter(client.user.username, client.user.avatarURL());
                     interaction.reply({embeds:[embed]});
                 } else {
+                    let duration = (moment.duration(video.duration).asHours() >= 1) ?
+                        moment.duration(video.duration).format("hh:mm:ss") :
+                        moment.duration(video.duration).format("mm:ss");
                     const embed = new MessageEmbed()
                         .setColor("#ff0000")
                         .setTitle(video.title)
                         .setURL(`https://www.youtube.com/watch?v=${video.id}`)
-                        .setDescription(video.duration)
+                        .setDescription(duration)
                         .setAuthor(video.channelTitle, video.channelPicture,
                             `https://www.youtube.com/channel/${video.channelId}`)
                         .setThumbnail(video.thumbnail)

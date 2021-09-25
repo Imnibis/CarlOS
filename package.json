@@ -27,6 +27,7 @@
     "ytube-api": "^1.4.5"
   },
   "devDependencies": {
+    "@types/moment-duration-format": "^2.2.3",
     "@types/node": "^16.9.6"
   }
 }
