@@ -1,14 +1,12 @@
-import { Client, CommandInteraction, MessageEmbed } from "discord.js";
+import { Client, CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 import ArgType from "../util/argtype";
 import Command from "../util/command";
 import * as youtubeSearch from "youtube-search";
 import Database from "../util/database";
 import YoutubeVideo from "../music/youtubeVideo";
 import { InteractionResponseType } from "discord-api-types";
-import moment = require("moment");
-import mdfSetup = require("moment-duration-format");
+import MusicQueue from "../music/musicqueue";
 
-mdfSetup(moment);
 class CommandPlay extends Command
 {
     constructor() 
@@ -24,36 +22,51 @@ class CommandPlay extends Command
         const input_string = interaction.options.getString("musique", true);
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
+        if (!(interaction.member as GuildMember).voice.channel ||
+            (interaction.member as GuildMember).voice.channel.guildId != interaction.guildId) {
+            this.sendNotConnectedMessage(client, interaction);
+            return;
+        }
         new Promise<YoutubeVideo>((resolve, reject) => {
             if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
-            else YoutubeVideo.search(input_string).then(resolve);
+            else YoutubeVideo.search(input_string).then(videos =>
+                (videos.length === 0 ? resolve(null) : resolve(videos[0])));
         }).then(video => {
+            if (video === null) {
+                this.sendDoesntExistMessage(client, interaction);
+                return;
+            }
             video.ready.then(() => {
-                if (!video.exists) {
-                    const embed = new MessageEmbed()
-                        .setColor("#ff0000")
-                        .setTitle("Erreur")
-                        .setDescription("Vidéo introuvable")
-                        .setFooter(client.user.username, client.user.avatarURL());
-                    interaction.reply({embeds:[embed]});
-                } else {
-                    let duration = (moment.duration(video.duration).asHours() >= 1) ?
-                        moment.duration(video.duration).format("hh:mm:ss") :
-                        moment.duration(video.duration).format("mm:ss");
-                    const embed = new MessageEmbed()
-                        .setColor("#ff0000")
-                        .setTitle(video.title)
-                        .setURL(`https://www.youtube.com/watch?v=${video.id}`)
-                        .setDescription(duration)
-                        .setAuthor(video.channelTitle, video.channelPicture,
-                            `https://www.youtube.com/channel/${video.channelId}`)
-                        .setThumbnail(video.thumbnail)
-                        .setFooter(client.user.username, client.user.avatarURL());
-                    interaction.reply({embeds:[embed]});
+                if (!video.exists) this.sendDoesntExistMessage(client, interaction)
+                else {
+                    MusicQueue.append(video, interaction.member as GuildMember);
+                    interaction.reply({embeds:[video.embed(client)]});
                 }
             });
         });
     }
+
+    sendNotConnectedMessage(client: Client, interaction:CommandInteraction)
+    {
+        const embed = new MessageEmbed()
+            .setColor("#ff0000")
+            .setTitle("Erreur")
+            .setDescription("Vous devez être connecté à un channel vocal sur ce serveur")
+            .setFooter(client.user.username, client.user.avatarURL());
+        interaction.reply({embeds:[embed]});
+    }
+
+    sendDoesntExistMessage(client: Client, interaction: CommandInteraction)
+    {
+        const embed = new MessageEmbed()
+            .setColor("#ff0000")
+            .setTitle("Erreur")
+            .setDescription("Vidéo introuvable")
+            .setFooter(client.user.username, client.user.avatarURL());
+        interaction.reply({embeds:[embed]});
+    }
+
+
 }
 
 export default CommandPlay;

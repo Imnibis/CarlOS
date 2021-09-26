@@ -2,6 +2,11 @@ import request = require("request");
 import youtubeSearch = require("youtube-search");
 import YouTube = require("ytube-api");
 import Database from "../util/database";
+import moment = require("moment");
+import mdfSetup = require("moment-duration-format");
+import { Client, MessageEmbed } from "discord.js";
+
+mdfSetup(moment);
 
 class YoutubeVideo
 {
@@ -55,7 +60,24 @@ class YoutubeVideo
         });
     }
 
-    static search(searchQuery: string) : Promise<YoutubeVideo>
+    embed(client: Client) : MessageEmbed
+    {
+        let duration = (moment.duration(this.duration).asHours() >= 1) ?
+            moment.duration(this.duration).format("hh:mm:ss") :
+            moment.duration(this.duration).format("mm:ss");
+        const embed = new MessageEmbed()
+            .setColor("#ff0000")
+            .setTitle(this.title)
+            .setURL(`https://www.youtube.com/watch?v=${this.id}`)
+            .setDescription(duration)
+            .setAuthor(this.channelTitle, this.channelPicture,
+                `https://www.youtube.com/channel/${this.channelId}`)
+            .setThumbnail(this.thumbnail)
+            .setFooter(client.user.username, client.user.avatarURL());
+        return embed;
+    }
+
+    static search(searchQuery: string) : Promise<YoutubeVideo[]>
     {
         return new Promise((resolve, reject) => {
             Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
@@ -68,10 +90,13 @@ class YoutubeVideo
                         reject();
                         return;
                     }
-                    if (results.length === 0)
-                        reject();
-                    else
-                        resolve(new YoutubeVideo(results[0].id));
+                    if (results.length === 0) reject();
+                    else {
+                        let videos = []
+                        for (let i = 0; i < results.length; i++)
+                            videos.push(new YoutubeVideo(results[i].id));
+                        resolve(videos);
+                    }
                 });
             });
         });
