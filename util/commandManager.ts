@@ -4,6 +4,7 @@ import { Client } from "discord.js";
 import { pipeline } from "stream";
 import CommandPing from "../commands/CommandPing";
 import CommandPlay from "../commands/CommandPlay";
+import CommandQueue from "../commands/CommandQueue";
 import Command from "./command";
 import Database from "./database";
 
@@ -19,6 +20,7 @@ class CommandManager
 
         const ping = new CommandPing();
         const play = new CommandPlay();
+        const queue = new CommandQueue();
 
         this.putCommands();
     }
