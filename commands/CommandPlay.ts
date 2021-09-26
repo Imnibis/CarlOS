@@ -6,6 +6,7 @@ import Database from "../util/database";
 import YoutubeVideo from "../music/youtubeVideo";
 import { InteractionResponseType } from "discord-api-types";
 import MusicQueue from "../music/musicqueue";
+import MusicPlayer from "../music/musicplayer";
 
 class CommandPlay extends Command
 {
@@ -22,8 +23,8 @@ class CommandPlay extends Command
         const input_string = interaction.options.getString("musique", true);
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
-        if (!(interaction.member as GuildMember).voice.channel ||
-            (interaction.member as GuildMember).voice.channel.guildId != interaction.guildId) {
+        
+        if (MusicPlayer.isUserInVoice(interaction.user, interaction.guild)) {
             console.log(`${(interaction.member as GuildMember).voice.channel?.guildId} != ${interaction.guildId}`)
             this.sendNotConnectedMessage(client, interaction);
             return;
