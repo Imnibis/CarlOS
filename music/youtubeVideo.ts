@@ -45,7 +45,7 @@ class YoutubeVideo
                         this.exists = true;
                         this.title = video.snippet.title;
                         this.description = video.snippet.description;
-                        this.thumbnail = video.snippet.thumbnails.maxres.url;
+                        this.thumbnail = video.snippet.thumbnails.default.url;
                         this.duration = video.contentDetails.duration;
                         this.channelId = video.snippet.channelId;
                         this.channelTitle = video.snippet.channelTitle;
