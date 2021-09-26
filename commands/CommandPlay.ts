@@ -24,6 +24,7 @@ class CommandPlay extends Command
         const regexResult = re.exec(input_string);
         if (!(interaction.member as GuildMember).voice.channel ||
             (interaction.member as GuildMember).voice.channel.guildId != interaction.guildId) {
+            console.log(`${(interaction.member as GuildMember).voice.channel?.guildId} != ${interaction.guildId}`)
             this.sendNotConnectedMessage(client, interaction);
             return;
         }
