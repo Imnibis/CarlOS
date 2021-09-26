@@ -5,7 +5,7 @@ import YoutubeVideo from "./youtubeVideo";
 
 class MusicQueue
 {
-    static queue: [{guild: Guild, queue: Music[]}];
+    static queue: [{guild: Guild, queue: Music[]}?] = [];
 
     static pop(guild: Guild) : Music | null
     static pop(guildId: string) : Music | null
