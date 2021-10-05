@@ -1,9 +1,11 @@
 import { Client, Intents } from "discord.js";
 import CommandManager from "./util/commandManager";
+import ListMessage from "./util/listmessage";
 
 class Bot
 {
     static client: Client
+
     constructor(token)
     {
         Bot.client = new Client({intents: [Intents.FLAGS.GUILDS]});

@@ -1,4 +1,5 @@
-import { Client, CommandInteraction } from "discord.js";
+import { Client, CommandInteraction, MessageEmbed } from "discord.js";
+import MusicQueue from "../music/musicqueue";
 import ArgType from "../util/argtype";
 import Command from "../util/command";
 
@@ -13,10 +14,12 @@ class CommandQueue extends Command
     run(client: Client, interaction: CommandInteraction)
     {
         super.run(client, interaction);
-        let arg = interaction.options.getString("my_arg", false);
-        if (arg !== null)
-            interaction.reply(`Pong ! ${arg}`);
-        else interaction.reply("Pong !");
+        const embed = new MessageEmbed()
+            .setColor("#00bfff")
+            .setTitle("File d'attente")
+            .setFooter(client.user.username, client.user.avatarURL());
+        const queue = MusicQueue.list(interaction.guild, 0, 10);
+        
     }
 }
 
