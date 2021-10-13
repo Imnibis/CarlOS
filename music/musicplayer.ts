@@ -1,15 +1,11 @@
-import { Guild, User } from "discord.js";
+import { Guild, GuildMember } from "discord.js";
 
 class MusicPlayer
 {
-    static isUserInVoice(user: User, guild: Guild) : boolean
+    static isUserInVoice(user: GuildMember, guild: Guild) : boolean
     {
-        const voiceStates = guild.voiceStates.cache
-        voiceStates.forEach(voiceState => {
-            if (voiceState.member.id === user.id && voiceState.channel)
-                return true;
-        });
-        return false;
+        return user.voice && user.voice.channel &&
+            user.voice.channel.guildId === guild.id;
     }
 }
 
