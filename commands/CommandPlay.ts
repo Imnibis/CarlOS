@@ -24,7 +24,8 @@ class CommandPlay extends Command
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
         
-        MusicPlayer.checkVoiceChannel(client, interaction);
+        if (!MusicPlayer.checkVoiceChannel(client, interaction))
+            return;
         new Promise<YoutubeVideo>((resolve, reject) => {
             if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
             else YoutubeVideo.search(input_string).then(videos =>
