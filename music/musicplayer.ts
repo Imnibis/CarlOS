@@ -77,6 +77,7 @@ class MusicPlayer
     {
         let music = MusicQueue.pop(guild);
         let voiceChannel = this.getVoiceChannel(guild);
+        console.log(voiceChannel);
 
         if (!music) return;
         if (!voiceChannel) {
