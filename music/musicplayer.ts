@@ -92,9 +92,7 @@ class MusicPlayer
         connection.subscribe(player);
         (async () => {
             let youtubeStream = await ytdl(music.video.id);
-            demuxProbe(youtubeStream).then(probe => {
-                player.play(createAudioResource(probe.stream));
-            })
+            player.play(createAudioResource(youtubeStream));
         })();
     }
 
