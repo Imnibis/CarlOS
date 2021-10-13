@@ -1,4 +1,4 @@
-import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, createAudioResource, demuxProbe, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
 import { Client, CommandInteraction, Guild, GuildMember, MessageEmbed, VoiceChannel } from "discord.js";
 import ytdl = require("ytdl-core-discord");
 import Music from "./music";
@@ -92,8 +92,9 @@ class MusicPlayer
         connection.subscribe(player);
         (async () => {
             let youtubeStream = await ytdl(music.video.id);
-            console.log(youtubeStream)
-            player.play(youtubeStream);
+            demuxProbe(youtubeStream).then(probe => {
+                player.play(createAudioResource(probe.stream));
+            })
         })();
     }
 
@@ -106,8 +107,10 @@ class MusicPlayer
         });
         if (player !== null) return player;
         player = new AudioPlayer();
-        player.on(AudioPlayerStatus.Idle, () => {
-            this.playNext(guild);
+        player.on("stateChange", (oldState, newState) => {
+            if (newState.status === AudioPlayerStatus.Idle &&
+                oldState.status !== AudioPlayerStatus.Idle)
+                this.playNext(guild);
         });
         this.players.push({"guild": guild, "player": player});
         return player;
