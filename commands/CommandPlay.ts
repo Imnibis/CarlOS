@@ -24,7 +24,7 @@ class CommandPlay extends Command
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
         
-        if (MusicPlayer.isUserInVoice(interaction.member, interaction.guild)) {
+        if (MusicPlayer.isUserInVoice(interaction.member as GuildMember, interaction.guild)) {
             console.log(`${(interaction.member as GuildMember).voice.channel?.guildId} != ${interaction.guildId}`)
             this.sendNotConnectedMessage(client, interaction);
             return;
