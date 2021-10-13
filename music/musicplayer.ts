@@ -126,8 +126,10 @@ class MusicPlayer
         this.channels.forEach(entry => {
             console.log(`${entry.guild.name}: ${entry.channel.name}`);
             console.log(`${entry.guild.id} === ${guild.id}`);
-            if (entry.guild.id === guild.id)
+            if (entry.guild.id === guild.id) {
+                console.log("returned");
                 return entry.channel;
+            }
         });
         return null;
     }
