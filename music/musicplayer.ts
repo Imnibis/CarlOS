@@ -77,7 +77,6 @@ class MusicPlayer
     {
         let music = MusicQueue.pop(guild);
         let voiceChannel = this.getVoiceChannel(guild);
-        console.log(voiceChannel);
 
         if (!music) return;
         if (!voiceChannel) {
@@ -92,7 +91,9 @@ class MusicPlayer
         let player = this.getAudioPlayer(guild);
         connection.subscribe(player);
         (async () => {
-            player.play(await ytdl(music.video.id));
+            let youtubeStream = await ytdl(music.video.id);
+            console.log(youtubeStream)
+            player.play(youtubeStream);
         })();
     }
 
