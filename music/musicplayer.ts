@@ -6,9 +6,9 @@ import MusicQueue from "./musicqueue";
 
 class MusicPlayer
 {
-    static players: [{"guild": Guild, "player": AudioPlayer}?]
-    static channels: [{"guild": Guild, "channel": VoiceChannel}?]
-    static connections: [VoiceConnection?]
+    static players: [{"guild": Guild, "player": AudioPlayer}?] = []
+    static channels: [{"guild": Guild, "channel": VoiceChannel}?] = []
+    static connections: [VoiceConnection?] = []
 
     static checkVoiceChannel(client: Client, interaction: CommandInteraction) : boolean
     {
