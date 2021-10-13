@@ -6,7 +6,7 @@ class MusicPlayer
     {
         const voiceStates = guild.voiceStates.cache
         voiceStates.forEach(voiceState => {
-            if (voiceState.member.id === user.id)
+            if (voiceState.member.id === user.id && voiceState.channel)
                 return true;
         });
         return false;
