@@ -1,4 +1,4 @@
-import { Client, CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { Client, CommandInteraction, GuildMember, MessageEmbed, VoiceChannel } from "discord.js";
 import ArgType from "../util/argtype";
 import Command from "../util/command";
 import * as youtubeSearch from "youtube-search";
@@ -26,6 +26,7 @@ class CommandPlay extends Command
         
         if (!MusicPlayer.checkVoiceChannel(client, interaction))
             return;
+        MusicPlayer.setVoiceChannel((interaction.member as GuildMember).voice.channel as VoiceChannel)
         new Promise<YoutubeVideo>((resolve, reject) => {
             if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
             else YoutubeVideo.search(input_string).then(videos =>
