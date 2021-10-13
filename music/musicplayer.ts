@@ -127,7 +127,7 @@ class MusicPlayer
             console.log(`${entry.guild.name}: ${entry.channel.name}`);
             console.log(`${entry.guild.id} === ${guild.id}`);
             if (entry.guild.id === guild.id) {
-                console.log("returned");
+                console.log(`Returned ${entry.channel}`);
                 return entry.channel;
             }
         });
