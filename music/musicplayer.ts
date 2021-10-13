@@ -21,6 +21,7 @@ class MusicPlayer
             this.sendSameChannelMessage(client, interaction);
             return false;
         }
+        this.setVoiceChannel(member.voice.channel as VoiceChannel);
         return true;
     }
     
@@ -122,9 +123,8 @@ class MusicPlayer
     static getVoiceChannel(guild: Guild) : VoiceChannel
     {
         this.channels.forEach(entry => {
-            if (entry.guild.id === guild.id) {
+            if (entry.guild.id === guild.id)
                 return entry.channel;
-            }
         });
         return null;
     }

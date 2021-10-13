@@ -26,7 +26,6 @@ class CommandPlay extends Command
         
         if (!MusicPlayer.checkVoiceChannel(client, interaction))
             return;
-        MusicPlayer.setVoiceChannel((interaction.member as GuildMember).voice.channel as VoiceChannel)
         new Promise<YoutubeVideo>((resolve, reject) => {
             if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
             else YoutubeVideo.search(input_string).then(videos =>
