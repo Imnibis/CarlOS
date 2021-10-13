@@ -24,11 +24,7 @@ class CommandPlay extends Command
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
         const regexResult = re.exec(input_string);
         
-        if (MusicPlayer.isUserInVoice(interaction.member as GuildMember, interaction.guild)) {
-            console.log(`${(interaction.member as GuildMember).voice.channel?.guildId} != ${interaction.guildId}`)
-            this.sendNotConnectedMessage(client, interaction);
-            return;
-        }
+        MusicPlayer.checkVoiceChannel(client, interaction);
         new Promise<YoutubeVideo>((resolve, reject) => {
             if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
             else YoutubeVideo.search(input_string).then(videos =>
@@ -46,16 +42,6 @@ class CommandPlay extends Command
                 }
             });
         });
-    }
-
-    sendNotConnectedMessage(client: Client, interaction:CommandInteraction)
-    {
-        const embed = new MessageEmbed()
-            .setColor("#ff0000")
-            .setTitle("Erreur")
-            .setDescription("Vous devez être connecté à un channel vocal sur ce serveur")
-            .setFooter(client.user.username, client.user.avatarURL());
-        interaction.reply({embeds:[embed]});
     }
 
     sendDoesntExistMessage(client: Client, interaction: CommandInteraction)
