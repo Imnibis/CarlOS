@@ -1,6 +1,7 @@
 import { Guild, GuildMember } from "discord.js";
 import Database from "../util/database";
 import Music from "./music";
+import MusicPlayer from "./musicplayer";
 import YoutubeVideo from "./youtubeVideo";
 
 class MusicQueue
@@ -50,9 +51,10 @@ class MusicQueue
             music = arg1;
         else throw new Error();
         let guildElem = this.queue.find(elem => elem.guild.id == music.user.guild.id);
-        if (!guildElem)
-            this.queue.push({guild: music.user.guild, queue: [music]})
-        else
+        if (!guildElem) {
+            this.queue.push({guild: music.user.guild, queue: [music]});
+            MusicPlayer.playNext(music.user.guild);
+        } else
             guildElem.queue.push(music);
     }
 }

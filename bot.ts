@@ -1,4 +1,5 @@
 import { Client, Intents } from "discord.js";
+import MusicPlayer from "./music/musicplayer";
 import CommandManager from "./util/commandManager";
 import ListMessage from "./util/listmessage";
 
@@ -21,5 +22,9 @@ class Bot
         CommandManager.handleInteractionEvent();
     }
 }
+
+process.on("beforeExit", () => {
+    MusicPlayer.destroyConnections();
+})
 
 export default Bot;
