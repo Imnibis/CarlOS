@@ -123,6 +123,7 @@ class MusicPlayer
     static getVoiceChannel(guild: Guild) : VoiceChannel
     {
         this.channels.forEach(entry => {
+            console.log(`${entry.guild.name}: ${entry.channel.name}`);
             if (entry.guild.id === guild.id)
                 return entry.channel;
         });
