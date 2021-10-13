@@ -98,11 +98,13 @@ class MusicPlayer
 
     static getAudioPlayer(guild: Guild) : AudioPlayer
     {
+        let player = null;
         this.players.forEach(entry => {
             if (entry.guild.id === guild.id)
-                return entry.player;
+                player = entry.player;
         });
-        let player = new AudioPlayer();
+        if (player !== null) return player;
+        player = new AudioPlayer();
         player.on(AudioPlayerStatus.Idle, () => {
             this.playNext(guild);
         });
@@ -112,26 +114,26 @@ class MusicPlayer
 
     static setVoiceChannel(channel: VoiceChannel) : void
     {
+        let foundChannel = false;
         this.channels.forEach(entry => {
             if (entry.guild.id === channel.guild.id) {
                 entry.channel = channel;
-                return;
+                foundChannel = true;
             }
         });
+        if (foundChannel) return;
         this.channels.push({"guild": channel.guild, "channel": channel});
     }
 
     static getVoiceChannel(guild: Guild) : VoiceChannel
     {
+        let channel = null;
         this.channels.forEach(entry => {
-            console.log(`${entry.guild.name}: ${entry.channel.name}`);
-            console.log(`${entry.guild.id} === ${guild.id}`);
             if (entry.guild.id === guild.id) {
-                console.log(`Returned ${entry.channel}`);
-                return entry.channel;
+                channel = entry.channel;
             }
         });
-        return null;
+        return channel;
     }
 
     static destroyConnections()
