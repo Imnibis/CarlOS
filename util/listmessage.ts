@@ -87,16 +87,18 @@ class ListMessage
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
-            if (this.maxPages !== 1)
+            if (this.maxPages !== 1) {
                 ARROW_EMOJIS.forEach(emoji => {
                     if (this.message && !this.message.deleted)
                         this.message.react(emoji)
                 });
-            if (this.interactive)
+            }
+            if (this.interactive) {
                 NUMBER_EMOJIS.forEach(emoji => {
                     if (this.message && !this.message.deleted)
                         this.message.react(emoji)
                 });
+            }
             this.awaitReactions(interaction);
         });
         return this;
