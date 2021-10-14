@@ -80,12 +80,12 @@ class ListMessage
             ARROW_EMOJIS.forEach(emoji => this.message.react(emoji));
             if (this.interactive)
                 NUMBER_EMOJIS.forEach(emoji => this.message.react(emoji));
-                this.message.awaitReactions({filter: (reaction, user) => {
-                return ARROW_EMOJIS.includes(reaction.emoji.name) ||
-                    (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name));
-            }, time: 900000}).then(collected => {
-                const reaction = collected.first();
-                
+            const collector = this.message.createReactionCollector({filter:
+                (reaction, user) => {
+                    return ARROW_EMOJIS.includes(reaction.emoji.name) ||
+                        (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name));
+                }, time: 900000});
+            collector.on("collect", (reaction, user) => {
                 console.log(reaction);
                 if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
                     const toAdd = (reaction.emoji.name == ARROW_EMOJIS[0]) ? -1 : 1;
