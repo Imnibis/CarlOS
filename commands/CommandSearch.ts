@@ -1,4 +1,5 @@
 import { Client, CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import MusicPlayer from "../music/musicplayer";
 import MusicQueue from "../music/musicqueue";
 import YoutubeVideo from "../music/youtubeVideo";
 import ArgType from "../util/argtype";
@@ -17,6 +18,8 @@ class CommandSearch extends Command
     run(client: Client, interaction: CommandInteraction)
     {
         super.run(client, interaction);
+        if (!MusicPlayer.checkVoiceChannel(client, interaction))
+            return;
         YoutubeVideo.search(interaction.options.getString("keywords", true)).then(videos => {
             new ListMessage("Résultats de recherche", "Aucun résultat.", 1, true)
                 .setUpdateFunction((from, nb) => {
