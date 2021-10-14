@@ -14,23 +14,23 @@ class ListMessage
     title: string;
     emptyText: string;
     perPage: number;
+    maxPages: number;
     interactive: boolean;
     active: boolean;
-    ephemeral: boolean;
     updateFn: UpdateFunction = () => [];
     interractFn: InterractFunction = () => {};
     messageId: string = "none";
     message: Message;
     pageNb: number = 0;
 
-    constructor(title: string, emptyText: string, ephemeral = true, interactive: boolean = false, perPage: number = 10)
+    constructor(title: string, emptyText: string, maxPages = 0, interactive: boolean = false, perPage: number = 10)
     {
         this.title = title;
         this.emptyText = emptyText;
         this.perPage = perPage;
+        this.maxPages = 0;
         this.interactive = interactive;
         this.active = true;
-        this.ephemeral = ephemeral;
         ListMessage.listMessages.push(this);
     }
 
@@ -59,7 +59,8 @@ class ListMessage
             .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         let currentList = []
         this.pageNb++;
-        while (currentList.length === 0 && this.pageNb !== 0) {
+        while ((currentList.length === 0 || (this.maxPages != 0 && this.pageNb >= this.maxPages))
+            && this.pageNb !== 0) {
             this.pageNb--;
             currentList = this.updateFn(this.pageNb * this.perPage, this.perPage);
         }
@@ -76,18 +77,19 @@ class ListMessage
     send(interaction: CommandInteraction) : ListMessage
     {
         const embed = this.getEmbed();
-        interaction.reply({embeds: [embed], ephemeral: this.ephemeral});
+        interaction.reply({embeds: [embed]});
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
-            ARROW_EMOJIS.forEach(emoji => this.message.react(emoji));
+            if (this.maxPages !== 1)
+                ARROW_EMOJIS.forEach(emoji => this.message.react(emoji));
             if (this.interactive)
                 NUMBER_EMOJIS.forEach(emoji => this.message.react(emoji));
             const collector = this.message.createReactionCollector({filter:
                 (reaction, user) => {
                     return (ARROW_EMOJIS.includes(reaction.emoji.name) ||
                         (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)))
-                        && !user.bot;
+                        && user.id === interaction.user.id;
                 }, time: 900000});
             collector.on("collect", (reaction, user) => {
                 if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
