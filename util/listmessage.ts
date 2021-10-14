@@ -58,7 +58,7 @@ class ListMessage
         this.pageNb++;
         while (currentList.length === 0 && this.pageNb !== 0) {
             this.pageNb--;
-            this.updateFn(this.pageNb * this.perPage, this.perPage);
+            currentList = this.updateFn(this.pageNb * this.perPage, this.perPage);
         }
         if (currentList.length === 0)
             return embed.setDescription(this.emptyText);
