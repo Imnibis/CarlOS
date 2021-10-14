@@ -16,6 +16,7 @@ class ListMessage
     emptyText: string;
     perPage: number;
     interactive: boolean;
+    active: boolean;
     updateFn: UpdateFunction = () => [];
     interractFn: InterractFunction = () => {};
     messageId: string = "none";
@@ -77,9 +78,9 @@ class ListMessage
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
-            ARROW_EMOJIS.forEach(emoji => this.message.react);
+            ARROW_EMOJIS.forEach(emoji => this.message.react(emoji));
             if (this.interactive)
-                NUMBER_EMOJIS.forEach(emoji => this.message.react);
+                NUMBER_EMOJIS.forEach(emoji => this.message.react(emoji));
                 this.message.awaitReactions({filter: (reaction, user) => {
                 return ARROW_EMOJIS.includes(reaction.emoji.name) ||
                     (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name));
