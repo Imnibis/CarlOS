@@ -13,6 +13,7 @@ class ListMessage
 {
     static listMessages: ListMessage[] = [];
     title: string;
+    emptyText: string;
     perPage: number;
     interactive: boolean;
     updateFn: UpdateFunction = () => [];
@@ -21,9 +22,10 @@ class ListMessage
     message: Message;
     pageNb: number = 0;
 
-    constructor(title: string, interactive: boolean = false, perPage: number = 10)
+    constructor(title: string, emptyText: string, interactive: boolean = false, perPage: number = 10)
     {
-        this.title;
+        this.title = title;
+        this.emptyText = emptyText;
         this.perPage = perPage;
         this.interactive = interactive;
         ListMessage.listMessages.push(this);
@@ -54,10 +56,12 @@ class ListMessage
             .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         let currentList = []
         this.pageNb++;
-        while (currentList.length === 0) {
+        while (currentList.length === 0 && this.pageNb !== 0) {
             this.pageNb--;
             this.updateFn(this.pageNb * this.perPage, this.perPage);
         }
+        if (currentList.length === 0)
+            return embed.setDescription(this.emptyText);
         let i = 1;
         currentList.forEach(elem => {
             embed.addField(`${i}. ${elem.title}`, elem.description, false);

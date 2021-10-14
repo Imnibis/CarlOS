@@ -20,7 +20,7 @@ class CommandQueue extends Command
             .setTitle("File d'attente")
             .setFooter(client.user.username, client.user.avatarURL());
         const queue = MusicQueue.list(interaction.guild, 0, 10);
-        new ListMessage("File d'attente")
+        new ListMessage("File d'attente", "La file d'attente est vide.")
             .setUpdateFunction((from, nb) => {
                 let elementList: ElementList = []
                 let i = 0;
