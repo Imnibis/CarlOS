@@ -91,7 +91,7 @@ class YoutubeVideo
                 };
                 youtubeSearch(searchQuery, opts, async (err, results) => {
                     if (err) {
-                        reject(err);
+                        reject(err.message);
                         return;
                     }
                     let videos: YoutubeVideo[] = []
