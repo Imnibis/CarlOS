@@ -5,9 +5,9 @@ type ElementList = [{title: string, description: string}?];
 type UpdateFunction = (from: number, nb: number) => ElementList;
 type InterractFunction = (nb: number) => void;
 
-const ARROW_EMOJIS = ["arrow_left", "arrow_right"]
-const NUMBER_EMOJIS = ["one", "two", "three", "four", "five", "six", "seven",
-    "eight", "nine", "keycap_ten"]
+const ARROW_EMOJIS = [":arrow_left:", ":arrow_right:"]
+const NUMBER_EMOJIS = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:",
+    ":seven:", ":eight:", ":nine:", ":keycap_ten:"]
 
 class ListMessage
 {
