@@ -23,7 +23,6 @@
     "sodium": "^3.0.2",
     "youtube-audio-stream": "^0.3.21",
     "youtube-search": "^1.1.6",
-    "ytdl-core-discord": "^1.3.1",
     "ytube-api": "^1.4.5"
   },
   "devDependencies": {

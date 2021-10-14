@@ -85,7 +85,8 @@ class ListMessage
                     (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name));
             }, time: 900000}).then(collected => {
                 const reaction = collected.first();
-
+                
+                console.log(reaction);
                 if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
                     const toAdd = (reaction.emoji.name == ARROW_EMOJIS[0]) ? -1 : 1;
                     this.pageNb += toAdd;

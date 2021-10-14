@@ -1,6 +1,5 @@
 import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, createAudioResource, demuxProbe, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
 import { Client, CommandInteraction, Guild, GuildMember, MessageEmbed, VoiceChannel } from "discord.js";
-import ytdl = require("ytdl-core-discord");
 import Music from "./music";
 import MusicQueue from "./musicqueue";
 
@@ -90,10 +89,7 @@ class MusicPlayer
         });
         let player = this.getAudioPlayer(guild);
         connection.subscribe(player);
-        (async () => {
-            let youtubeStream = await ytdl(music.video.id);
-            player.play(createAudioResource(youtubeStream));
-        })();
+        music.createAudioResource().then(resource => player.play(resource));
     }
 
     static getAudioPlayer(guild: Guild) : AudioPlayer
