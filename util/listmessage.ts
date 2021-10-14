@@ -48,7 +48,8 @@ class ListMessage
 
     update()
     {
-        this.message?.edit({embeds:[this.getEmbed()]});
+        if (this.message && !this.message.deleted)
+            this.message.edit({embeds:[this.getEmbed()]});
     }
 
     getEmbed() : MessageEmbed

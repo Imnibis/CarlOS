@@ -43,7 +43,7 @@ class CommandSearch extends Command
                     }
                 })
                 .send(interaction);
-        })
+        }).catch(console.error)
     }
 }
 
