@@ -28,7 +28,7 @@ class CommandQueue extends Command
                     if (i >= from && i < from + nb) {
                         const video = element.video;
                         elementList.push({title: video.title, description:
-                            `${video.formattedDuration()} - Ajoutée par ${element.user.nickname}`});
+                            `${video.formattedDuration()} - Ajoutée par ${element.getUser().nickname}`});
                     }
                 });
                 return elementList;

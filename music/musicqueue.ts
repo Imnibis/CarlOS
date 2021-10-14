@@ -50,10 +50,10 @@ class MusicQueue
         else if (arg1 instanceof Music)
             music = arg1;
         else throw new Error();
-        let guildElem = this.queue.find(elem => elem.guild.id == music.user.guild.id);
+        let guildElem = this.queue.find(elem => elem.guild.id == music.getUser().guild.id);
         if (!guildElem) {
-            this.queue.push({guild: music.user.guild, queue: [music]});
-            MusicPlayer.playNext(music.user.guild);
+            this.queue.push({guild: music.getUser().guild, queue: [music]});
+            MusicPlayer.playNext(music.getUser().guild);
         } else
             guildElem.queue.push(music);
     }
