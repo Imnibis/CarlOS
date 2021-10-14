@@ -16,18 +16,21 @@ class ListMessage
     perPage: number;
     interactive: boolean;
     active: boolean;
+    ephemeral: boolean;
     updateFn: UpdateFunction = () => [];
     interractFn: InterractFunction = () => {};
     messageId: string = "none";
     message: Message;
     pageNb: number = 0;
 
-    constructor(title: string, emptyText: string, interactive: boolean = false, perPage: number = 10)
+    constructor(title: string, emptyText: string, ephemeral = true, interactive: boolean = false, perPage: number = 10)
     {
         this.title = title;
         this.emptyText = emptyText;
         this.perPage = perPage;
         this.interactive = interactive;
+        this.active = true;
+        this.ephemeral = ephemeral;
         ListMessage.listMessages.push(this);
     }
 
@@ -73,7 +76,7 @@ class ListMessage
     send(interaction: CommandInteraction) : ListMessage
     {
         const embed = this.getEmbed();
-        interaction.reply({embeds: [embed]});
+        interaction.reply({embeds: [embed], ephemeral: this.ephemeral});
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
@@ -82,11 +85,11 @@ class ListMessage
                 NUMBER_EMOJIS.forEach(emoji => this.message.react(emoji));
             const collector = this.message.createReactionCollector({filter:
                 (reaction, user) => {
-                    return ARROW_EMOJIS.includes(reaction.emoji.name) ||
-                        (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name));
+                    return (ARROW_EMOJIS.includes(reaction.emoji.name) ||
+                        (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)))
+                        && !user.bot;
                 }, time: 900000});
             collector.on("collect", (reaction, user) => {
-                console.log(reaction);
                 if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
                     const toAdd = (reaction.emoji.name == ARROW_EMOJIS[0]) ? -1 : 1;
                     this.pageNb += toAdd;
@@ -98,6 +101,9 @@ class ListMessage
                     this.update();
                 }
             })
+            collector.on("end", () => {
+                this.message.reactions.removeAll();
+            });
         });
         return this;
     }
