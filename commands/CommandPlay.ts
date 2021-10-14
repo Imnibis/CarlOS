@@ -55,7 +55,7 @@ class CommandPlay extends Command
         interaction.reply({embeds:[embed]});
     }
 
-
+    
 }
 
 export default CommandPlay;

@@ -18,6 +18,7 @@ class ListMessage
     updateFn: UpdateFunction = () => [];
     interractFn: InterractFunction = () => {};
     messageId: string = "none";
+    message: Message;
     pageNb: number = 0;
 
     constructor(title: string, interactive: boolean = false, perPage: number = 10)
@@ -40,13 +41,23 @@ class ListMessage
         return this;
     }
 
+    update()
+    {
+        this.message.edit({embeds:[this.getEmbed()]});
+    }
+
     getEmbed() : MessageEmbed
     {
         const embed = new MessageEmbed()
             .setColor("#00bfff")
             .setTitle(this.title)
             .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
-        let currentList = this.updateFn(this.pageNb * this.perPage, this.perPage);
+        let currentList = []
+        this.pageNb++;
+        while (currentList.length === 0) {
+            this.pageNb--;
+            this.updateFn(this.pageNb * this.perPage, this.perPage);
+        }
         let i = 1;
         currentList.forEach(elem => {
             embed.addField(`${i}. ${elem.title}`, elem.description, false);
@@ -61,9 +72,27 @@ class ListMessage
         interaction.reply({embeds: [embed]});
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
-            ARROW_EMOJIS.forEach(emoji => (message as Message).react);
+            this.message = message as Message;
+            ARROW_EMOJIS.forEach(emoji => this.message.react);
             if (this.interactive)
-                NUMBER_EMOJIS.forEach(emoji => (message as Message).react);
+                NUMBER_EMOJIS.forEach(emoji => this.message.react);
+                this.message.awaitReactions({filter: (reaction, user) => {
+                return ARROW_EMOJIS.includes(reaction.emoji.name) ||
+                    (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name));
+            }, time: 900000}).then(collected => {
+                const reaction = collected.first();
+
+                if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
+                    const toAdd = (reaction.emoji.name == ARROW_EMOJIS[0]) ? -1 : 1;
+                    this.pageNb += toAdd;
+                    if (this.pageNb < 0)
+                        this.pageNb = 0;
+                    this.update();
+                } else if (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)) {
+                    this.interractFn(NUMBER_EMOJIS.indexOf(reaction.emoji.name));
+                    this.update();
+                }
+            })
         });
         return this;
     }
@@ -71,4 +100,5 @@ class ListMessage
     
 }
 
-export default ListMessage
+export type {ElementList};
+export default ListMessage;

@@ -26,5 +26,8 @@ class Bot
 process.on("beforeExit", () => {
     MusicPlayer.destroyConnections();
 })
+process.on("SIGINT", () => {
+    MusicPlayer.destroyConnections();
+})
 
 export default Bot;

@@ -60,16 +60,20 @@ class YoutubeVideo
         });
     }
 
+    formattedDuration() : string
+    {
+        return (moment.duration(this.duration).asHours() >= 1) ?
+        moment.duration(this.duration).format("hh:mm:ss") :
+        moment.duration(this.duration).format("mm:ss");
+    }
+
     embed(client: Client) : MessageEmbed
     {
-        let duration = (moment.duration(this.duration).asHours() >= 1) ?
-            moment.duration(this.duration).format("hh:mm:ss") :
-            moment.duration(this.duration).format("mm:ss");
         const embed = new MessageEmbed()
             .setColor("#ff0000")
             .setTitle(this.title)
             .setURL(`https://www.youtube.com/watch?v=${this.id}`)
-            .setDescription(duration)
+            .setDescription(this.formattedDuration())
             .setAuthor(this.channelTitle, this.channelPicture,
                 `https://www.youtube.com/channel/${this.channelId}`)
             .setThumbnail(this.thumbnail)
