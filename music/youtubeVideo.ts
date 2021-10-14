@@ -19,7 +19,7 @@ class YoutubeVideo
     channelTitle: string;
     channelPicture: string;
     exists: boolean;
-    ready: Promise<void>;
+    ready: Promise<YoutubeVideo>;
 
     constructor(videoID: string)
     {
@@ -32,14 +32,14 @@ class YoutubeVideo
         this.channelTitle = null;
         this.channelPicture = null;
         this.exists = false;
-        this.ready = new Promise((resolve, reject) => {
+        this.ready = new Promise<YoutubeVideo>((resolve, reject) => {
             const youtube = new YouTube();
             Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
                 youtube.setKey(key);
                 youtube.getById([videoID], (err, res) => {
                     if (err) {
                         this.exists = false;
-                        resolve();
+                        resolve(this);
                     } else {
                         let video = res.items[0];
                         this.exists = true;
@@ -52,7 +52,7 @@ class YoutubeVideo
                         youtube.getChannelById([video.snippet.channelId], (err, chan) => {
                             if (err) this.channelPicture = "";
                             else this.channelPicture = chan.items[0].snippet.thumbnails.high.url;
-                            resolve();
+                            resolve(this);
                         });
                     }
                 });
@@ -89,18 +89,15 @@ class YoutubeVideo
                     maxResults: 10,
                     key: key
                 };
-                youtubeSearch(searchQuery, opts, (err, results) => {
+                youtubeSearch(searchQuery, opts, async (err, results) => {
                     if (err) {
                         reject();
                         return;
                     }
-                    if (results.length === 0) reject();
-                    else {
-                        let videos = []
-                        for (let i = 0; i < results.length; i++)
-                            videos.push(new YoutubeVideo(results[i].id));
-                        resolve(videos);
-                    }
+                    let videos: YoutubeVideo[] = []
+                    for (let i = 0; i < results.length; i++)
+                        videos.push(await new YoutubeVideo(results[i].id).ready);
+                    resolve(videos);
                 });
             });
         });

@@ -28,8 +28,8 @@ class CommandPlay extends Command
             return;
         new Promise<YoutubeVideo>((resolve, reject) => {
             if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
-            else YoutubeVideo.search(input_string).then(videos =>
-                (videos.length === 0 ? resolve(null) : resolve(videos[0])));
+            else YoutubeVideo.search(input_string).then(async videos =>
+                (videos.length === 0 ? resolve(null) : resolve(await videos[0])));
         }).then(video => {
             if (video === null) {
                 this.sendDoesntExistMessage(client, interaction);

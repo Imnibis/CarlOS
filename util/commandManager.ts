@@ -5,6 +5,7 @@ import { pipeline } from "stream";
 import CommandPing from "../commands/CommandPing";
 import CommandPlay from "../commands/CommandPlay";
 import CommandQueue from "../commands/CommandQueue";
+import CommandSearch from "../commands/CommandSearch";
 import Command from "./command";
 import Database from "./database";
 
@@ -18,9 +19,10 @@ class CommandManager
     {
         this.client = client;
 
-        const ping = new CommandPing();
+        //const ping = new CommandPing();
         const play = new CommandPlay();
         const queue = new CommandQueue();
+        const search = new CommandSearch();
 
         this.putCommands();
     }

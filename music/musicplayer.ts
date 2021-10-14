@@ -78,6 +78,10 @@ class MusicPlayer
         let voiceChannel = this.getVoiceChannel(guild);
 
         if (!music) return;
+        if (!music.video) {
+            this.playNext(guild);
+            return;
+        }
         if (!voiceChannel) {
             console.log(`No channel bound for guild ${guild.name} !`);
             return;

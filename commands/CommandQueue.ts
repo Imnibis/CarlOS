@@ -15,10 +15,6 @@ class CommandQueue extends Command
     run(client: Client, interaction: CommandInteraction)
     {
         super.run(client, interaction);
-        const embed = new MessageEmbed()
-            .setColor("#00bfff")
-            .setTitle("File d'attente")
-            .setFooter(client.user.username, client.user.avatarURL());
         new ListMessage("File d'attente", "La file d'attente est vide.")
             .setUpdateFunction((from, nb) => {
                 let elementList: ElementList = []

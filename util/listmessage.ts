@@ -74,6 +74,11 @@ class ListMessage
         return embed;
     }
 
+    delete() : void
+    {
+        this.message.delete();
+    }
+
     send(interaction: CommandInteraction) : ListMessage
     {
         const embed = this.getEmbed();
