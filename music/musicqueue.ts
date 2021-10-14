@@ -27,7 +27,18 @@ class MusicQueue
     static remove(arg: Guild | string, id: number) : void
     {
         let guildId : string = (arg instanceof Guild ? arg.id : arg);
-        this.queue.find(elem => elem.guild.id == guildId)?.queue.splice(id);
+        const guildElem = this.queue.find(elem => elem.guild.id === guildId);
+        
+        if (!guildElem) return;
+        guildElem.queue.splice(id);
+        if (guildElem.queue.length == 0) {
+            for (let i = 0; i < this.queue.length; i++) {
+                if (this.queue[i].guild.id === guildId) {
+                    this.queue.splice(i);
+                    break;
+                }
+            }
+        }
     }
 
     static list(guild: Guild, from: number, nb: number) : Music[]

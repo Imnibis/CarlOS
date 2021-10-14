@@ -64,7 +64,6 @@ class ListMessage
             this.pageNb--;
             currentList = this.updateFn(this.pageNb * this.perPage, this.perPage);
         }
-        console.log("Page: " + this.pageNb)
         if (currentList.length === 0)
             return embed.setDescription(this.emptyText);
         let i = 1;
@@ -86,32 +85,35 @@ class ListMessage
                 ARROW_EMOJIS.forEach(emoji => this.message.react(emoji));
             if (this.interactive)
                 NUMBER_EMOJIS.forEach(emoji => this.message.react(emoji));
-            const collector = this.message.createReactionCollector({filter:
-                (reaction, user) => {
-                    return (ARROW_EMOJIS.includes(reaction.emoji.name) ||
-                        (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)))
-                        && user.id === interaction.user.id;
-                }, time: 900000});
-            collector.on("collect", (reaction, user) => {
-                if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
-                    const toAdd = (reaction.emoji.name == ARROW_EMOJIS[0]) ? -1 : 1;
-                    this.pageNb += toAdd;
-                    if (this.pageNb < 0)
-                        this.pageNb = 0;
-                    this.update();
-                } else if (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)) {
-                    this.interractFn(NUMBER_EMOJIS.indexOf(reaction.emoji.name));
-                    this.update();
-                }
-            })
-            collector.on("end", () => {
-                this.message.reactions.removeAll();
-            });
+            this.awaitReactions(interaction);
         });
         return this;
     }
 
-    
+    awaitReactions(interaction: CommandInteraction)
+    {
+        const collector = this.message.createReactionCollector({filter:
+            (reaction, user) => {
+                return (ARROW_EMOJIS.includes(reaction.emoji.name) ||
+                    (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)))
+                    && user.id === interaction.user.id;
+            }, time: 900000});
+        collector.on("collect", (reaction, user) => {
+            if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
+                const toAdd = (reaction.emoji.name === ARROW_EMOJIS[0]) ? -1 : 1;
+                this.pageNb += toAdd;
+                if (this.pageNb < 0)
+                    this.pageNb = 0;
+                this.update();
+            } else if (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)) {
+                this.interractFn(this.pageNb * this.perPage + NUMBER_EMOJIS.indexOf(reaction.emoji.name));
+                this.update();
+            }
+        })
+        collector.on("end", () => {
+            this.message.reactions.removeAll();
+        });
+    }
 }
 
 export type {ElementList};

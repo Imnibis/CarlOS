@@ -19,17 +19,15 @@ class CommandQueue extends Command
             .setColor("#00bfff")
             .setTitle("File d'attente")
             .setFooter(client.user.username, client.user.avatarURL());
-        const queue = MusicQueue.list(interaction.guild, 0, 10);
         new ListMessage("File d'attente", "La file d'attente est vide.")
             .setUpdateFunction((from, nb) => {
                 let elementList: ElementList = []
                 let i = 0;
+                let queue = MusicQueue.list(interaction.guild, from, nb);
                 queue.forEach(element => {
-                    if (i >= from && i < from + nb) {
-                        const video = element.video;
-                        elementList.push({title: video.title, description:
-                            `${video.formattedDuration()} - Ajoutée par ${element.getUser().nickname}`});
-                    }
+                    const video = element.video;
+                    elementList.push({title: video.title, description:
+                        `${video.formattedDuration()} - par ${video.channelTitle}`});
                 });
                 return elementList;
             })
