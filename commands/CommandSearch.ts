@@ -10,14 +10,14 @@ class CommandSearch extends Command
     constructor() 
     {
         super("search", "Chercher une musique sur YouTube");
-        this.addArgument("mots clés", "Mots clés de la recherche", ArgType.STRING, true);
+        this.addArgument("keywords", "Mots clés de la recherche", ArgType.STRING, true);
         this.register();
     }
 
     run(client: Client, interaction: CommandInteraction)
     {
         super.run(client, interaction);
-        YoutubeVideo.search(interaction.options.getString("mots clés", true)).then(videos => {
+        YoutubeVideo.search(interaction.options.getString("keywords", true)).then(videos => {
             new ListMessage("Résultats de recherche", "Aucun résultat.", 1, true)
                 .setUpdateFunction((from, nb) => {
                     let elementList: ElementList = []
