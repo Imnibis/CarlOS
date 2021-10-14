@@ -28,7 +28,7 @@ class ListMessage
         this.title = title;
         this.emptyText = emptyText;
         this.perPage = perPage;
-        this.maxPages = 0;
+        this.maxPages = maxPages;
         this.interactive = interactive;
         this.active = true;
         ListMessage.listMessages.push(this);
@@ -48,7 +48,7 @@ class ListMessage
 
     update()
     {
-        this.message.edit({embeds:[this.getEmbed()]});
+        this.message?.edit({embeds:[this.getEmbed()]});
     }
 
     getEmbed() : MessageEmbed
