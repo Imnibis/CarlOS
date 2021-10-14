@@ -59,11 +59,12 @@ class ListMessage
             .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         let currentList = []
         this.pageNb++;
-        while ((currentList.length === 0 || (this.maxPages != 0 && this.pageNb >= this.maxPages))
+        while ((currentList.length === 0 || (this.maxPages !== 0 && this.pageNb >= this.maxPages))
             && this.pageNb !== 0) {
             this.pageNb--;
             currentList = this.updateFn(this.pageNb * this.perPage, this.perPage);
         }
+        console.log("Page: " + this.pageNb)
         if (currentList.length === 0)
             return embed.setDescription(this.emptyText);
         let i = 1;
