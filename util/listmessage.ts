@@ -77,6 +77,7 @@ class ListMessage
     delete() : void
     {
         this.message.delete();
+        this.message = null;
     }
 
     send(interaction: CommandInteraction) : ListMessage
@@ -87,9 +88,15 @@ class ListMessage
             this.messageId = message.id;
             this.message = message as Message;
             if (this.maxPages !== 1)
-                ARROW_EMOJIS.forEach(emoji => this.message.react(emoji));
+                ARROW_EMOJIS.forEach(emoji => {
+                    if (this.message && !this.message.deleted)
+                        this.message.react(emoji)
+                });
             if (this.interactive)
-                NUMBER_EMOJIS.forEach(emoji => this.message.react(emoji));
+                NUMBER_EMOJIS.forEach(emoji => {
+                    if (this.message && !this.message.deleted)
+                        this.message.react(emoji)
+                });
             this.awaitReactions(interaction);
         });
         return this;
