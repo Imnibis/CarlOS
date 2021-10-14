@@ -64,7 +64,8 @@ class MusicQueue
         let guildElem = this.queue.find(elem => elem.guild.id == music.getUser().guild.id);
         if (!guildElem) {
             this.queue.push({guild: music.getUser().guild, queue: [music]});
-            MusicPlayer.playNext(music.getUser().guild);
+            if (MusicPlayer.isBotIdle(music.getUser().guild))
+                MusicPlayer.playNext(music.getUser().guild);
         } else
             guildElem.queue.push(music);
     }
