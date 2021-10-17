@@ -81,15 +81,15 @@ class YoutubeVideo
         return embed;
     }
 
-    static search(searchQuery: string) : Promise<YoutubeVideo[]>
+    static search(searchQuery: string, amount: number = 10) : Promise<YoutubeVideo[]>
     {
         return new Promise((resolve, reject) => {
             Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(async key => {
                 let results = await youtubeSearch.search(searchQuery);
+                console.log(results);
                 let videos: YoutubeVideo[] = [];
-                for (let i = 0; i < results.length; i++)
+                for (let i = 0; i < results.length && i < amount; i++)
                     videos.push(await new YoutubeVideo(results[i].id.videoId).ready);
-                console.log(videos);
                 resolve(videos);
             });
         });
