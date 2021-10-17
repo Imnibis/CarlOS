@@ -85,10 +85,11 @@ class YoutubeVideo
     {
         return new Promise((resolve, reject) => {
             Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(async key => {
-                let results = await youtubeSearch.search(searchQuery)
-                let videos: YoutubeVideo[] = []
+                let results = await youtubeSearch.search(searchQuery);
+                let videos: YoutubeVideo[] = [];
                 for (let i = 0; i < results.length; i++)
                     videos.push(await new YoutubeVideo(results[i].id.videoId).ready);
+                console.log(videos);
                 resolve(videos);
             });
         });
