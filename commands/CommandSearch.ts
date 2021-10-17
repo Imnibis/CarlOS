@@ -26,8 +26,11 @@ class CommandSearch extends Command
                     let elementList: ElementList = []
                     let i = 0;
                     videos.forEach(video => {
-                        elementList.push({title: video.title, description:
-                            `${video.formattedDuration()} - par ${video.channelTitle}`});
+                        if (i >= from && i < from + nb) {
+                            elementList.push({title: video.title, description:
+                                `${video.formattedDuration()} - par ${video.channelTitle}`});
+                        }
+                        i++;
                     });
                     return elementList;
                 })

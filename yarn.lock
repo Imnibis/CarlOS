@@ -734,7 +734,7 @@ glob@^7.1.3:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-got@^11.8.0:
+got@^11.8.0, got@^11.8.2:
   version "11.8.2"
   resolved "https://registry.yarnpkg.com/got/-/got-11.8.2.tgz#7abb3959ea28c31f3576f1576c1effce23f33599"
   integrity sha512-D0QywKgIe30ODs+fm8wMZiAcZjypcCodPNuMz5H9Mny7RJ+IjJ10BdmGW7OM7fHXP+O7r6ZwapQ/YQmMSvB0UQ==
@@ -1836,6 +1836,13 @@ youtube-dl-exec@^1.3.2:
     is-unix "~2.0.1"
     mkdirp "~1.0.4"
     node-fetch "~2.6.5"
+
+youtube-search-without-api-key@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/youtube-search-without-api-key/-/youtube-search-without-api-key-1.0.6.tgz#f82873044f258bb5757e7eae3acf6bfa3f68a900"
+  integrity sha512-NC65siqwuRoeVfHpR0brnsg9JYekSjjDPLN+BLOscPghBJUwiHfAgj/u+tayeKmEfC/86UYy8eolkLHqRPUDuQ==
+  dependencies:
+    got "^11.8.2"
 
 youtube-search@^1.1.6:
   version "1.1.6"
