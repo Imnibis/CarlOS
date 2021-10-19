@@ -22,14 +22,16 @@ class Bot
         console.log(`Registering commands...`);
         CommandManager.init(Bot.client);
         CommandManager.handleInteractionEvent();
+        Bot.client.on("message", message => {
+            if(message.author.bot)
+                return;
+            let splitString = message.content.split("di");
+            splitString.shift();
+            if (splitString.length == 0 || splitString[0] == "")
+                return;
+            message.reply(splitString.join("di"));
+        })
     }
 }
-
-process.on("beforeExit", () => {
-    MusicPlayer.destroyConnections();
-})
-process.on("SIGINT", () => {
-    MusicPlayer.destroyConnections();
-})
 
 export default Bot;
