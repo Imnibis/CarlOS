@@ -23,6 +23,7 @@ class Bot
         CommandManager.init(Bot.client);
         CommandManager.handleInteractionEvent();
         Bot.client.on("message", message => {
+            console.log(`Message reçu de ${message.author.username}: ${message.content}`);
             if(message.author.bot)
                 return;
             let splitString = message.content.split("di");
