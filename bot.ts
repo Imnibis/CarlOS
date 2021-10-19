@@ -22,7 +22,7 @@ class Bot
         console.log(`Registering commands...`);
         CommandManager.init(Bot.client);
         CommandManager.handleInteractionEvent();
-        Bot.client.on("message", message => {
+        Bot.client.on("messageCreate" , message => {
             console.log(`Message reçu de ${message.author.username}: ${message.content}`);
             if(message.author.bot)
                 return;
