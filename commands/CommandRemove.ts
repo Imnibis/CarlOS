@@ -35,7 +35,7 @@ class CommandRemove extends Command
                     .setTitle(":put_litter_in_its_place: Retirer une musique")
                     .setDescription("Musique retirée.")
                     .setFooter(client.user.username, client.user.avatarURL());
-                interaction.reply({embeds:[embed]});
+                interaction.followUp({embeds:[embed]});
             })
             .send(interaction);
     }
