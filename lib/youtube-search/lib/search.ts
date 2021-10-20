@@ -2,14 +2,14 @@ import { ParserService } from './parser.service';
 import got from 'got';
 
 export async function searchVideo(searchQuery: string) {
-  const YOUTUBE_URL = 'https://www.youtube.fr';
+  const YOUTUBE_URL = 'https://www.youtube.com';
 
   const results = [];
   let details = [];
   let fetched = false;
   const options = { type: "video", limit: 0 };
 
-  const searchRes: any = await got.get(encodeURI(`${YOUTUBE_URL}/results?q=${encodeURI(searchQuery.trim())}&hl=en`));
+  const searchRes: any = await got.get(`${YOUTUBE_URL}/results`, {searchParams: {query: searchQuery.trim()}});
   let html = await searchRes.body;
   // try to parse html
   try {
