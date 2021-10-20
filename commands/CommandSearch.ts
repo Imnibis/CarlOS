@@ -20,6 +20,8 @@ class CommandSearch extends Command
         super.run(client, interaction);
         if (!MusicPlayer.checkVoiceChannel(client, interaction))
             return;
+        this.sendFuckYoutubeMessage(client, interaction);
+        return;
         YoutubeVideo.search(interaction.options.getString("keywords", true)).then(videos => {
             new ListMessage("Résultats de recherche", "Aucun résultat.", 1, true)
                 .setUpdateFunction((from, nb) => {
@@ -47,6 +49,18 @@ class CommandSearch extends Command
                 })
                 .send(interaction);
         }).catch(console.error)
+    }
+
+    sendFuckYoutubeMessage(client: Client, interaction: CommandInteraction)
+    {
+        const embed = new MessageEmbed()
+            .setColor("#ff0000")
+            .setTitle("Erreur")
+            .setDescription("Utilisez le lien de la vidéo SVP. " + 
+                "Youtube est ultra chiant avec les quotas donc j'ai désactivé "
+                + "la recherche jusqu'à trouver une bonne alternative")
+            .setFooter(client.user.username, client.user.avatarURL());
+        interaction.reply({embeds:[embed]});
     }
 }
 

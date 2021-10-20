@@ -28,8 +28,12 @@ class CommandPlay extends Command
             return;
         new Promise<YoutubeVideo>((resolve, reject) => {
             if (regexResult !== null) resolve(new YoutubeVideo(regexResult[5]));
-            else YoutubeVideo.search(input_string).then(async videos =>
-                (videos.length === 0 ? resolve(null) : resolve(await videos[0])));
+            else {
+                this.sendFuckYoutubeMessage(client, interaction);
+                reject();
+                //YoutubeVideo.search(input_string).then(async videos =>
+                //(videos.length === 0 ? resolve(null) : resolve(await videos[0])));
+            }
         }).then(video => {
             if (video === null) {
                 this.sendDoesntExistMessage(client, interaction);
@@ -42,7 +46,19 @@ class CommandPlay extends Command
                     interaction.reply({embeds:[video.embed(client)]});
                 }
             });
-        });
+        }).catch();
+    }
+
+    sendFuckYoutubeMessage(client: Client, interaction: CommandInteraction)
+    {
+        const embed = new MessageEmbed()
+            .setColor("#ff0000")
+            .setTitle("Erreur")
+            .setDescription("Utilisez le lien de la vidéo SVP. " + 
+                "Youtube est ultra chiant avec les quotas donc j'ai désactivé "
+                + "la recherche jusqu'à trouver une bonne alternative")
+            .setFooter(client.user.username, client.user.avatarURL());
+        interaction.reply({embeds:[embed]});
     }
 
     sendDoesntExistMessage(client: Client, interaction: CommandInteraction)
