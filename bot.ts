@@ -1,6 +1,7 @@
-import { Client, Intents } from "discord.js";
+import { Client, Intents, Message } from "discord.js";
 import MusicPlayer from "./music/musicplayer";
 import CommandManager from "./util/commandManager";
+import FunReplies from "./util/funReplies";
 import ListMessage from "./util/listmessage";
 
 class Bot
@@ -22,18 +23,11 @@ class Bot
         console.log(`Registering commands...`);
         CommandManager.init(Bot.client);
         CommandManager.handleInteractionEvent();
-        Bot.client.on("messageCreate" , message => {
+        Bot.client.on("messageCreate" , (message: Message) => {
             if(message.author.bot)
                 return;
-            let splitString = message.content.split("di");
-            splitString.shift();
-            if (splitString.length == 0)
-                return;
-            const trimmed = splitString[0].trim();
-            let word = trimmed.split(" ")[0];
-            if (word.length <= 1 || !word.match(/.*[a-zA-Z].*/))
-                return;
-            message.reply(word);
+            FunReplies.replyDis(message);
+            FunReplies.replyFeur(message);
         })
     }
 }

@@ -77,6 +77,7 @@ class MusicPlayer
         let music = MusicQueue.pop(guild);
         let voiceChannel = this.getVoiceChannel(guild);
 
+        this.getAudioPlayer(guild).stop();
         if (!music) return;
         if (!music.video) {
             this.playNext(guild);
