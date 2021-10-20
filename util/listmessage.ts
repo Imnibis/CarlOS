@@ -127,7 +127,8 @@ class ListMessage
             }
         })
         collector.on("end", () => {
-            this.message.reactions.removeAll();
+            if (this.message && !this.message.deleted)
+                this.message.reactions.removeAll();
         });
     }
 }
