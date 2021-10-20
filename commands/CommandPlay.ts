@@ -46,7 +46,7 @@ class CommandPlay extends Command
                     interaction.reply({embeds:[video.embed(client)]});
                 }
             });
-        }).catch();
+        }).catch(() => {});
     }
 
     sendFuckYoutubeMessage(client: Client, interaction: CommandInteraction)
