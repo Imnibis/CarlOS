@@ -1,5 +1,5 @@
 import request = require("request");
-import youtubeSearch = require("youtube-search-without-api-key");
+import youtubeSearch = require("../lib/youtube-search");
 import YouTube = require("ytube-api");
 import Database from "../util/database";
 import moment = require("moment");
@@ -83,15 +83,13 @@ class YoutubeVideo
 
     static search(searchQuery: string, amount: number = 10) : Promise<YoutubeVideo[]>
     {
-        return new Promise((resolve, reject) => {
-            Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(async key => {
-                let results = await youtubeSearch.search(searchQuery);
-                console.log(results);
-                let videos: YoutubeVideo[] = [];
-                for (let i = 0; i < results.length && i < amount; i++)
-                    videos.push(await new YoutubeVideo(results[i].id.videoId).ready);
-                resolve(videos);
-            });
+        return new Promise(async (resolve, reject) => {
+            let results = await youtubeSearch.search(searchQuery);
+            console.log(results);
+            let videos: YoutubeVideo[] = [];
+            for (let i = 0; i < results.length && i < amount; i++)
+                videos.push(await new YoutubeVideo(results[i].id.videoId).ready);
+            resolve(videos);
         });
     }
 }

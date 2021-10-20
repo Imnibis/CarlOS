@@ -30,7 +30,7 @@ class Bot
             if (splitString.length == 0)
                 return;
             const trimmed = splitString[0].trim();
-            const word = trimmed.split(" ")[0];
+            let word = trimmed.split(" ")[0];
             if (word.length <= 1 || !word.match(/.*[a-zA-Z].*/))
                 return;
             message.reply(word);
