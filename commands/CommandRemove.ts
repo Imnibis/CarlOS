@@ -15,7 +15,13 @@ class CommandRemove extends Command
     run(client: Client, interaction: CommandInteraction)
     {
         super.run(client, interaction);
-        new ListMessage(":put_litter_in_its_place: Retirer une musique", "La file d'attente est vide.", 0, true)
+        const embed = new MessageEmbed()
+            .setColor("#00bfff")
+            .setTitle("Nope")
+            .setDescription("Commande WIP.")
+            .setFooter(client.user.username, client.user.avatarURL());
+        interaction.reply({embeds:[embed]});
+        /*new ListMessage(":put_litter_in_its_place: Retirer une musique", "La file d'attente est vide.", 0, true)
             .setUpdateFunction((from, nb) => {
                 let elementList: ElementList = []
                 let i = 0;
@@ -37,7 +43,7 @@ class CommandRemove extends Command
                     .setFooter(client.user.username, client.user.avatarURL());
                 interaction.followUp({embeds:[embed]});
             })
-            .send(interaction);
+            .send(interaction);*/
     }
 }
 
