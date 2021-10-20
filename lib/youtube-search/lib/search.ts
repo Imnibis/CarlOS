@@ -20,7 +20,9 @@ export async function searchVideo(searchQuery: string) {
     });
     html = html.replaceAll("\\\\\"", "");
     html = JSON.parse(html)
-  } catch(e) { /* nothing */}
+  } catch(e) {
+    console.log("Failed at 1")
+  }
 
   if(html && html.contents && html.contents.sectionListRenderer && html.contents.sectionListRenderer.contents
     && html.contents.sectionListRenderer.contents.length > 0 && html.contents.sectionListRenderer.contents[0].itemSectionRenderer &&
@@ -33,14 +35,17 @@ export async function searchVideo(searchQuery: string) {
     try {
       details = JSON.parse(html.split('{"itemSectionRenderer":{"contents":')[html.split('{"itemSectionRenderer":{"contents":').length - 1].split(',"continuations":[{')[0]);
       fetched = true;
-    } catch (e) { /* nothing */
+    } catch (e) {
+      console.log("Failed at 2")
     }
   }
   if (!fetched) {
     try {
       details = JSON.parse(html.split('{"itemSectionRenderer":')[html.split('{"itemSectionRenderer":').length - 1].split('},{"continuationItemRenderer":{')[0]).contents;
       fetched = true;
-    } catch(e) { /* nothing */ }
+    } catch(e) {
+      console.log("Failed at 3")
+    }
   }
 
   if (!fetched) return [];
