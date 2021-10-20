@@ -9,7 +9,7 @@ export async function searchVideo(searchQuery: string) {
   let fetched = false;
   const options = { type: "video", limit: 0 };
 
-  const searchRes: any = await got.get(`${YOUTUBE_URL}/results`, {searchParams: {query: searchQuery.trim()}});
+  const searchRes: any = await got.get(encodeURI(`${YOUTUBE_URL}/results?search_query=${encodeURI(searchQuery.trim())}&hl=en`));
   let html = await searchRes.body;
   // try to parse html
   try {
