@@ -5,6 +5,7 @@ import { pipeline } from "stream";
 import CommandPing from "../commands/CommandPing";
 import CommandPlay from "../commands/CommandPlay";
 import CommandQueue from "../commands/CommandQueue";
+import CommandRemove from "../commands/CommandRemove";
 import CommandSearch from "../commands/CommandSearch";
 import CommandSkip from "../commands/CommandSkip";
 import Command from "./command";
@@ -25,6 +26,7 @@ class CommandManager
         const queue = new CommandQueue();
         const search = new CommandSearch();
         const skip = new CommandSkip();
+        const remove = new CommandRemove();
 
         this.putCommands();
     }

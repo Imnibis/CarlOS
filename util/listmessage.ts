@@ -22,6 +22,7 @@ class ListMessage
     messageId: string = "none";
     message: Message;
     pageNb: number = 0;
+    currentList: ElementList;
 
     constructor(title: string, emptyText: string, maxPages = 0, interactive: boolean = false, perPage: number = 10)
     {
@@ -58,17 +59,17 @@ class ListMessage
             .setColor("#00bfff")
             .setTitle(this.title)
             .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
-        let currentList = []
+        this.currentList = []
         this.pageNb++;
-        while ((currentList.length === 0 || (this.maxPages !== 0 && this.pageNb >= this.maxPages))
+        while ((this.currentList.length === 0 || (this.maxPages !== 0 && this.pageNb >= this.maxPages))
             && this.pageNb !== 0) {
             this.pageNb--;
-            currentList = this.updateFn(this.pageNb * this.perPage, this.perPage);
+            this.currentList = this.updateFn(this.pageNb * this.perPage, this.perPage);
         }
-        if (currentList.length === 0)
+        if (this.currentList.length === 0)
             return embed.setDescription(this.emptyText);
         let i = 1;
-        currentList.forEach(elem => {
+        this.currentList.forEach(elem => {
             embed.addField(`${i}. ${elem.title}`, elem.description, false);
             i++;
         });
@@ -88,13 +89,13 @@ class ListMessage
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
-            if (this.maxPages !== 1) {
+            if (this.maxPages !== 1 && this.currentList.length !== 0) {
                 ARROW_EMOJIS.forEach(emoji => {
                     if (this.message && !this.message.deleted)
                         this.message.react(emoji)
                 });
             }
-            if (this.interactive) {
+            if (this.interactive && this.currentList.length !== 0) {
                 NUMBER_EMOJIS.forEach(emoji => {
                     if (this.message && !this.message.deleted)
                         this.message.react(emoji)

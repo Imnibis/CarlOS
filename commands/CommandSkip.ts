@@ -16,7 +16,7 @@ class CommandSkip extends Command
         MusicPlayer.playNext(interaction.guild);
         const embed = new MessageEmbed()
             .setColor("#00bfff")
-            .setTitle("Skip ! :fast_forward:")
+            .setTitle(":fast_forward: Skip !")
             .setDescription("Musique skippée !")
             .setFooter(client.user.username, client.user.avatarURL());
         interaction.reply({embeds:[embed]});
