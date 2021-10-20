@@ -29,7 +29,7 @@ export async function searchVideo(searchQuery: string) {
     html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents[0]?.itemSectionRenderer?.contents &&
     html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents[0]?.itemSectionRenderer?.contents?.length > 0){
     details = html.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
-    console.log(details);
+    console.log(html);
     fetched = true;
   }
   // backup/ alternative parsing
