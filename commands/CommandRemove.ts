@@ -15,7 +15,7 @@ class CommandRemove extends Command
     run(client: Client, interaction: CommandInteraction)
     {
         super.run(client, interaction);
-        new ListMessage(":put_litter_in_its_place: Retirer une musique", "La file d'attente est vide.")
+        new ListMessage(":put_litter_in_its_place: Retirer une musique", "La file d'attente est vide.", 0, true)
             .setUpdateFunction((from, nb) => {
                 let elementList: ElementList = []
                 let i = 0;
