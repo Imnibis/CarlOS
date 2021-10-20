@@ -23,14 +23,17 @@ class Bot
         CommandManager.init(Bot.client);
         CommandManager.handleInteractionEvent();
         Bot.client.on("messageCreate" , message => {
-            console.log(`Message reçu de ${message.author.username}: ${message.content}`);
             if(message.author.bot)
                 return;
             let splitString = message.content.split("di");
             splitString.shift();
-            if (splitString.length == 0 || splitString[0] == "")
+            if (splitString.length == 0)
                 return;
-            message.reply(splitString.join("di"));
+            const trimmed = splitString[0].trim();
+            const word = trimmed.split(" ")[0];
+            if (word.length <= 1 || !word.match(/.*[a-zA-Z].*/))
+                return;
+            message.reply(word);
         })
     }
 }
