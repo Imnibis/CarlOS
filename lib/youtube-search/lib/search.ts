@@ -24,10 +24,11 @@ export async function searchVideo(searchQuery: string) {
     console.log("Failed at 1")
   }
 
-  if(html && html.contents && html.contents.sectionListRenderer && html.contents.sectionListRenderer.contents
-    && html.contents.sectionListRenderer.contents.length > 0 && html.contents.sectionListRenderer.contents[0].itemSectionRenderer &&
-    html.contents.sectionListRenderer.contents[0].itemSectionRenderer.contents.length > 0){
-    details = html.contents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
+  if(html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents &&
+    html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents?.length > 0 &&
+    html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents[0]?.itemSectionRenderer?.contents &&
+    html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents[0]?.itemSectionRenderer?.contents?.length > 0){
+    details = html.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
     fetched = true;
   }
   // backup/ alternative parsing
