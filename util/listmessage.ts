@@ -89,21 +89,35 @@ class ListMessage
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
-            if (this.maxPages !== 1 && this.currentList.length !== 0) {
-                ARROW_EMOJIS.forEach(emoji => {
-                    if (this.message && !this.message.deleted)
-                        this.message.react(emoji)
-                });
-            }
-            if (this.interactive && this.currentList.length !== 0) {
-                NUMBER_EMOJIS.forEach(emoji => {
-                    if (this.message && !this.message.deleted)
-                        this.message.react(emoji)
-                });
-            }
+            this.addArrowReaction(0);
             this.awaitReactions(interaction);
         });
         return this;
+    }
+
+    addArrowReaction(id: number)
+    {
+        if (id > 1) {
+            this.addNumberReaction(0);
+            return;
+        }
+        if (this.maxPages !== 1 && this.currentList.length !== 0 &&
+            this.message && !this.message.deleted)
+            this.message.react(NUMBER_EMOJIS[id])
+                .then(() => { this.addArrowReaction(id + 1) })
+        else if (this.message && !this.message.deleted)
+            this.addNumberReaction(0);
+    }
+
+    addNumberReaction(id: number)
+    {
+        if (id > 9) return;
+        if (this.interactive && this.currentList.length !== 0 &&
+            this.message && !this.message.deleted) {
+            if (this.message && !this.message.deleted)
+                this.message.react(NUMBER_EMOJIS[id])
+                    .then(() => { this.addNumberReaction(id + 1) })
+        }
     }
 
     awaitReactions(interaction: CommandInteraction)
