@@ -2,7 +2,7 @@ import { ParserService } from './parser.service';
 import got from 'got';
 
 export async function searchVideo(searchQuery: string) {
-  const YOUTUBE_URL = 'https://www.youtube.com';
+  const YOUTUBE_URL = 'https://www.youtube.fr';
 
   const results = [];
   let details = [];
@@ -29,7 +29,6 @@ export async function searchVideo(searchQuery: string) {
     html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents[0]?.itemSectionRenderer?.contents &&
     html?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents[0]?.itemSectionRenderer?.contents?.length > 0){
     details = html.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
-    console.log(JSON.stringify(html));
     fetched = true;
   }
   // backup/ alternative parsing
