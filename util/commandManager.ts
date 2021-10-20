@@ -6,6 +6,7 @@ import CommandPing from "../commands/CommandPing";
 import CommandPlay from "../commands/CommandPlay";
 import CommandQueue from "../commands/CommandQueue";
 import CommandSearch from "../commands/CommandSearch";
+import CommandSkip from "../commands/CommandSkip";
 import Command from "./command";
 import Database from "./database";
 
@@ -23,6 +24,7 @@ class CommandManager
         const play = new CommandPlay();
         const queue = new CommandQueue();
         const search = new CommandSearch();
+        const skip = new CommandSkip();
 
         this.putCommands();
     }
