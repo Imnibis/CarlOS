@@ -108,7 +108,7 @@ class ListMessage
         if (this.maxPages !== 1 && this.currentList.length !== 0 &&
             this.message && !this.message.deleted) {
             this.nextReaction++;
-            this.message.react(ARROW_EMOJIS[this.nextReaction - 1])
+            this.message.react(ARROW_EMOJIS[this.nextReaction - 1]).catch(() => {})
         } else if (this.message && !this.message.deleted) {
             this.nextReaction = 0;
             this.emojiListNb = 1;
@@ -123,7 +123,7 @@ class ListMessage
             this.message && !this.message.deleted) {
             if (this.message && !this.message.deleted) {
                 this.nextReaction++;
-                this.message.react(NUMBER_EMOJIS[this.nextReaction - 1])
+                this.message.react(NUMBER_EMOJIS[this.nextReaction - 1]).catch(() => {})
             }
         }
     }
