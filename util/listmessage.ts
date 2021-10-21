@@ -24,7 +24,7 @@ class ListMessage
     pageNb: number = 0;
     currentList: ElementList;
     emojiListNb: number = 0;
-    nextReaction = 0;
+    nextReaction: number = 0;
 
     constructor(title: string, emptyText: string, maxPages = 0, interactive: boolean = false, perPage: number = 10)
     {
@@ -91,9 +91,8 @@ class ListMessage
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
-            this.awaitBotReactions();
-            this.addArrowReaction();
             this.awaitReactions(interaction);
+            this.addArrowReaction();
         });
         return this;
     }
@@ -109,7 +108,7 @@ class ListMessage
         if (this.maxPages !== 1 && this.currentList.length !== 0 &&
             this.message && !this.message.deleted) {
             this.nextReaction++;
-            this.message.react(NUMBER_EMOJIS[this.nextReaction - 1])
+            this.message.react(ARROW_EMOJIS[this.nextReaction - 1])
         } else if (this.message && !this.message.deleted) {
             this.nextReaction = 0;
             this.emojiListNb = 1;
@@ -129,30 +128,21 @@ class ListMessage
         }
     }
 
-    awaitBotReactions()
-    {
-        const collector = this.message.createReactionCollector({filter:
-            (reaction, user) => {
-                return (ARROW_EMOJIS.includes(reaction.emoji.name) ||
-                    (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)))
-                    && user.id === Bot.client.user.id;
-            }, time: 900000});
-        collector.on("collect", (reaction, user) => {
-            if (this.emojiListNb == 0)
-                this.addArrowReaction();
-            else this.addNumberReaction();
-        });
-    }
-
     awaitReactions(interaction: CommandInteraction)
     {
         const collector = this.message.createReactionCollector({filter:
             (reaction, user) => {
                 return (ARROW_EMOJIS.includes(reaction.emoji.name) ||
                     (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)))
-                    && user.id === interaction.user.id;
+                    && (user.id === interaction.user.id || user.id === Bot.client.user.id);
             }, time: 900000});
         collector.on("collect", (reaction, user) => {
+            if (user.id === Bot.client.user.id) {
+                if (this.emojiListNb === 0)
+                    this.addArrowReaction();
+                else this.addNumberReaction();
+                return;
+            }
             if (ARROW_EMOJIS.includes(reaction.emoji.name)) {
                 const toAdd = (reaction.emoji.name === ARROW_EMOJIS[0]) ? -1 : 1;
                 this.pageNb += toAdd;
