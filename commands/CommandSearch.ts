@@ -20,8 +20,6 @@ class CommandSearch extends Command
         super.run(client, interaction);
         if (!MusicPlayer.checkVoiceChannel(client, interaction))
             return;
-        this.sendFuckYoutubeMessage(client, interaction);
-        return;
         YoutubeVideo.search(interaction.options.getString("keywords", true)).then(videos => {
             new ListMessage("Résultats de recherche", "Aucun résultat.", 1, true)
                 .setUpdateFunction((from, nb) => {

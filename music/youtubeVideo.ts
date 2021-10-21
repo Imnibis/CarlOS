@@ -1,5 +1,5 @@
 import request = require("request");
-import youtubeSearch = require("../lib/youtube-search");
+import youtubeSearch = require("youtube-search-api");
 import YouTube = require("ytube-api");
 import Database from "../util/database";
 import moment = require("moment");
@@ -84,10 +84,11 @@ class YoutubeVideo
     static search(searchQuery: string, amount: number = 10) : Promise<YoutubeVideo[]>
     {
         return new Promise(async (resolve, reject) => {
-            let results = await youtubeSearch.search(searchQuery);
-            console.log(results);
+            let results = await youtubeSearch.GetListByKeyword(searchQuery, false, amount);
             let videos: YoutubeVideo[] = [];
-            for (let i = 0; i < results.length && i < amount; i++)
+            if (!results?.items?.length)
+                resolve(videos);
+            for (let i = 0; i < results?.items?.length && i < amount; i++)
                 videos.push(await new YoutubeVideo(results[i].id.videoId).ready);
             resolve(videos);
         });
