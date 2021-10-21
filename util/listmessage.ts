@@ -23,6 +23,8 @@ class ListMessage
     message: Message;
     pageNb: number = 0;
     currentList: ElementList;
+    emojiListNb: number = 0;
+    nextReaction = 0;
 
     constructor(title: string, emptyText: string, maxPages = 0, interactive: boolean = false, perPage: number = 10)
     {
@@ -89,35 +91,57 @@ class ListMessage
         interaction.fetchReply().then(message => {
             this.messageId = message.id;
             this.message = message as Message;
-            this.addArrowReaction(0);
+            this.awaitBotReactions();
+            this.addArrowReaction();
             this.awaitReactions(interaction);
         });
         return this;
     }
 
-    addArrowReaction(id: number)
+    addArrowReaction()
     {
-        if (id > 1) {
-            this.addNumberReaction(0);
+        if (this.nextReaction > 1) {
+            this.nextReaction = 0;
+            this.emojiListNb = 1;
+            this.addNumberReaction();
             return;
         }
         if (this.maxPages !== 1 && this.currentList.length !== 0 &&
-            this.message && !this.message.deleted)
-            this.message.react(NUMBER_EMOJIS[id])
-                .then(() => { this.addArrowReaction(id + 1) })
-        else if (this.message && !this.message.deleted)
-            this.addNumberReaction(0);
+            this.message && !this.message.deleted) {
+            this.nextReaction++;
+            this.message.react(NUMBER_EMOJIS[this.nextReaction - 1])
+        } else if (this.message && !this.message.deleted) {
+            this.nextReaction = 0;
+            this.emojiListNb = 1;
+            this.addNumberReaction();
+        }
     }
 
-    addNumberReaction(id: number)
+    addNumberReaction()
     {
-        if (id > 9) return;
+        if (this.nextReaction > 9) return;
         if (this.interactive && this.currentList.length !== 0 &&
             this.message && !this.message.deleted) {
-            if (this.message && !this.message.deleted)
-                this.message.react(NUMBER_EMOJIS[id])
-                    .then(() => { this.addNumberReaction(id + 1) })
+            if (this.message && !this.message.deleted) {
+                this.nextReaction++;
+                this.message.react(NUMBER_EMOJIS[this.nextReaction - 1])
+            }
         }
+    }
+
+    awaitBotReactions()
+    {
+        const collector = this.message.createReactionCollector({filter:
+            (reaction, user) => {
+                return (ARROW_EMOJIS.includes(reaction.emoji.name) ||
+                    (this.interactive && NUMBER_EMOJIS.includes(reaction.emoji.name)))
+                    && user.id === Bot.client.user.id;
+            }, time: 900000});
+        collector.on("collect", (reaction, user) => {
+            if (this.emojiListNb == 0)
+                this.addArrowReaction();
+            else this.addNumberReaction();
+        });
     }
 
     awaitReactions(interaction: CommandInteraction)
