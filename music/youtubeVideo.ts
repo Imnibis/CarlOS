@@ -88,8 +88,10 @@ class YoutubeVideo
             let videos: YoutubeVideo[] = [];
             if (!results?.items?.length)
                 resolve(videos);
-            for (let i = 0; i < results?.items?.length && i < amount; i++)
+            for (let i = 0; i < results?.items?.length && i < amount; i++) {
+                console.log(results.items[i])
                 videos.push(await new YoutubeVideo(results.items[i].id.videoId).ready);
+            }
             resolve(videos);
         });
     }
