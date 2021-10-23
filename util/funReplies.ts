@@ -5,23 +5,40 @@ class FunReplies
 {
     static replyDis(message: Message) : void
     {
-        let splitString = message.content.split("di");
-        splitString.shift();
-        if (splitString.length == 0)
+        let splitString = message.content.split(" ");
+        if (splitString.length === 0)
             return;
-        const trimmed = splitString[0].trim();
-        let word = trimmed.split(" ")[0];
-        if (word.length <= 1 || !word.match(/.*[a-zA-Z].*/))
-            return;
-        message.reply(word);
+        splitString.forEach(word => {
+            const trimmed = this.getUntilNonAlpha(word);
+            const random = Math.random() * 5;
+            if (trimmed.startsWith('di') && trimmed.length > 4 && random < 1) {
+                message.reply(trimmed);
+            }
+        });
     }
 
     static replyFeur(message: Message) : void
     {
         const sentence = this.trimNonAlpha(message.content).toLowerCase();
+        const random = Math.random() * 5;
 
-        if (sentence.endsWith("quoi") || sentence.endsWith("quois"))
+        if ((sentence.endsWith("quoi") || sentence.endsWith("quois")) &&
+            random < 1)
             message.reply("feur");
+    }
+
+    static getUntilNonAlpha(str: string): string
+    {
+        let result = '';
+        let alpha = "abcdefghijklmnopqrstuvwxyz"
+        alpha += alpha.toUpperCase();
+
+        for (let i = 0; i < str.length; i++) {
+            if (!alpha.includes[str[i]])
+                return result;
+            result += str[i];
+        }
+        return result;
     }
 
     static trimNonAlpha(str: string): string
