@@ -34,7 +34,7 @@ class FunReplies
         alpha += alpha.toUpperCase();
 
         for (let i = 0; i < str.length; i++) {
-            if (!alpha.includes[str[i]])
+            if (!alpha.includes(str[i]))
                 return result;
             result += str[i];
         }
