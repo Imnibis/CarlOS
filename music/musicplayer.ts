@@ -78,7 +78,10 @@ class MusicPlayer
         let voiceChannel = this.getVoiceChannel(guild);
 
         this.getAudioPlayer(guild).stop();
-        if (!music) return;
+        if (!music) {
+            
+            return;
+        }
         if (!music.video) {
             this.playNext(guild);
             return;
@@ -94,7 +97,28 @@ class MusicPlayer
         });
         let player = this.getAudioPlayer(guild);
         connection.subscribe(player);
+        this.connections.push(connection);
         music.createAudioResource().then(resource => player.play(resource));
+    }
+
+    static isPlaying(guild: Guild) : boolean
+    {
+        return this.getAudioPlayer(guild).state.status === AudioPlayerStatus.Playing
+    }
+
+    static isPaused(guild: Guild) : boolean
+    {
+        return this.getAudioPlayer(guild).state.status === AudioPlayerStatus.Paused
+    }
+
+    static pause(guild: Guild) : void
+    {
+        this.getAudioPlayer(guild).pause();
+    }
+
+    static resume(guild: Guild) : void
+    {
+        this.getAudioPlayer(guild).unpause()
     }
 
     static getAudioPlayer(guild: Guild) : AudioPlayer
