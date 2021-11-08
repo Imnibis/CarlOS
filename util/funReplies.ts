@@ -11,7 +11,7 @@ class FunReplies
         splitString.forEach(word => {
             const trimmed = this.getUntilNonAlpha(word);
             const random = Math.random() * 5;
-            if (trimmed.startsWith('di') && trimmed.length > 4 && random < 1) {
+            if (trimmed.toLowerCase().startsWith('di') && trimmed.length > 4 && random < 1) {
                 message.reply(trimmed.substr(2, trimmed.length - 2));
             }
         });
