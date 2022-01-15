@@ -1,4 +1,4 @@
-import { ApplicationCommandOption, Client, CommandInteraction, CommandInteractionOptionResolver, Interaction } from "discord.js";
+import { ApplicationCommandOption, Client, CommandInteraction, CommandInteractionOptionResolver, Interaction, MessageEmbed } from "discord.js";
 import ArgType from "./argtype";
 import CommandManager from "./commandManager";
 import Database from "./database";
@@ -40,7 +40,15 @@ class Command
         if (subcommandName !== null) {
             console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName} ${subcommandName}`);
             const subcommand = this.subcommands.find(elem => elem.apiObject.name === subcommandName);
-            subcommand.run(client, interaction);
+            if (subcommand) subcommand.run(client, interaction);
+            else {
+                const embed = new MessageEmbed()
+                    .setColor("#ff0000")
+                    .setTitle("Erreur")
+                    .setDescription("Commande introuvable")
+                    .setFooter(client.user.username, client.user.avatarURL());
+                interaction.reply({embeds:[embed], ephemeral: true});
+            }
         } else {
             console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName}`);
             this.run(client, interaction);
