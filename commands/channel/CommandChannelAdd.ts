@@ -6,7 +6,7 @@ class CommandChannelAdd extends Command
 {
     constructor() 
     {
-        super("add", "Créer un channel");
+        super("add", "Créer un channel", true);
         this.addArgument("nom", "Nom du channel", ArgType.STRING, true);
         this.addArgument("catégorie", "Catégorie où placer le channel", ArgType.CHANNEL, true);
     }

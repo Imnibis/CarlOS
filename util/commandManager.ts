@@ -75,7 +75,7 @@ class CommandManager
             
             this.commands.forEach(command => {
                 if (command.apiObject.name === commandName)
-                    command.run(this.client, interaction);
+                    command.exec(this.client, interaction);
             })
         });
     }
