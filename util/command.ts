@@ -7,11 +7,12 @@ class Command
 {
     apiObject: {"name": string, "description": string, "options": {"type": number,
         "name": string, "description": string, "choices"?: {"name": string,
-        "value": string}[], "required": boolean}[]}
+        "value": string}[], "required"?: boolean}[]}
+    subcommands: Command[] = [];
     
-    constructor(name: string, description: string)
+    constructor(name: string, description: string, subcommand: boolean = false)
     {
-        console.log(`Registering ${name} command...`);
+        console.log(`Registering ${name} ${subcommand ? 'sub' : ''}command...`);
         this.apiObject = {name: name, description: description, options: []};
     }
 
@@ -26,10 +27,28 @@ class Command
                 "choices": choices, "type": type, "required": required});
     }
 
-    run(client: Client, interaction: CommandInteraction)
+    addSubcommand(subcommand: Command, type: ArgType = ArgType.SUBCOMMAND)
+    {
+        this.subcommands.push(subcommand);
+        this.apiObject.options.push(Object.assign(subcommand.apiObject, {type: type}))
+    }
+
+    exec(client: Client, interaction: CommandInteraction)
     {
         const author = interaction.member.user;
-        console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName}`);
+        const subcommandName = interaction.options.getSubcommand(false);
+        if (subcommandName !== null) {
+            console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName} ${subcommandName}`);
+            const subcommand = this.subcommands.find(elem => elem.apiObject.name === subcommandName);
+            subcommand.run(client, interaction);
+        } else {
+            console.log(`${author.username}#${author.discriminator} used command ${interaction.commandName}`);
+            this.run(client, interaction);
+        }
+    }
+
+    run(client: Client, interaction: CommandInteraction)
+    {
     }
 
     register()
