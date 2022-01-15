@@ -2,6 +2,7 @@ import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { Client } from "discord.js";
 import { pipeline } from "stream";
+import CommandChannel from "../commands/channel/CommandChannel";
 import CommandPause from "../commands/CommandPause";
 import CommandPing from "../commands/CommandPing";
 import CommandPlay from "../commands/CommandPlay";
@@ -31,6 +32,7 @@ class CommandManager
         const remove = new CommandRemove();
         const pause = new CommandPause();
         const resume = new CommandResume();
+        const channel = new CommandChannel();
 
         this.putCommands();
     }
