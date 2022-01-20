@@ -6,7 +6,8 @@ class Command
 {
     apiObject: {"name": string, "description": string, "options": {"type": number,
         "name": string, "description": string, "choices"?: {"name": string,
-        "value": string}[], "required"?: boolean}[]}
+        "value": string}[], "required"?: boolean}[], "userPermissions"?: string[],
+        "defaultPermission"?: boolean}
     subcommands: Command[] = [];
     
     constructor(name: string, description: string, subcommand: boolean = false)
@@ -24,6 +25,13 @@ class Command
         else
             this.apiObject.options.push({"name": name, "description": description,
                 "choices": choices, "type": type, "required": required});
+    }
+
+    requirePermission(permission: string)
+    {
+        if (!this.apiObject.userPermissions)
+            this.apiObject.userPermissions = [];
+        this.apiObject.userPermissions.push(permission);
     }
 
     addSubcommand(subcommand: Command, type: ArgType = ArgType.SUBCOMMAND)

@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import { Client } from "discord.js";
+import { ApplicationCommandPermissionData, Client, GuildApplicationCommandPermissionData } from "discord.js";
 import { pipeline } from "stream";
 import CommandChannel from "../commands/channel/CommandChannel";
 import CommandPause from "../commands/CommandPause";
@@ -48,8 +48,11 @@ class CommandManager
         console.log("Sending commands to Discord...");
         let apiCommands = [];
         this.commands.forEach(command => {
+            if (command.apiObject.userPermissions)
+                command.apiObject.defaultPermission = false;
             apiCommands.push(command.apiObject);
         });
+        
         const rest = new REST({version: '9'}).setToken(this.client.token);
         this.client.guilds.cache.forEach((guild) => {
             (async () => {
@@ -57,6 +60,41 @@ class CommandManager
                     const appID = this.client.application.id;
                     const guildID = guild.id;
                     await rest.put(Routes.applicationGuildCommands(appID, guildID), {body: apiCommands},);
+                    const getRoles = (commandName) => {
+                        const permissions = apiCommands.find(
+                            (x) => x.name === commandName
+                        ).userPermissions;
+            
+                        if (!permissions) return null;
+                        return guild.roles.cache.filter(
+                            (x) => x.permissions.has(permissions) && !x.managed
+                        );
+                    };
+                    const updatedGuild = await this.client.guilds.fetch(guildID)
+                    const fullPermissions = updatedGuild.commands.cache.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
+                        const roles = getRoles(x.name);
+                        if (!roles) return accumulator;
+
+                        const permissions = roles.reduce<ApplicationCommandPermissionData[]>((a, v) => {
+                            return [
+                                ...a,
+                                {
+                                    id: v.id,
+                                    type: "ROLE",
+                                    permission: true,
+                                },
+                            ]
+                        }, []);
+
+                        return [
+                            ...accumulator,
+                            {
+                                id: x.id,
+                                permissions,
+                            },
+                        ];
+                    }, []);
+                    guild.commands.permissions.set({fullPermissions});
                 } catch (error) {
                     console.log(error);
                 }
