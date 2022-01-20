@@ -1,24 +1,5 @@
 import { BelongsTo, Column, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
-
-@Table
-class GuildSetting extends Model {
-    @PrimaryKey
-    @Column
-    id: number
-
-    @Column
-    name: string
-
-    @Column
-    value: string
-
-    @ForeignKey(() => Guild)
-    @Column
-    guild_id: string
-
-    @BelongsTo(() => Guild)
-    guild: Guild
-}
+import GuildSetting from "./guild_setting.model";
 
 @Table
 class Guild extends Model {
@@ -34,4 +15,3 @@ class Guild extends Model {
 }
 
 export default Guild;
-export {Guild, GuildSetting};
