@@ -1,4 +1,5 @@
 import { Client, Intents, Message } from "discord.js";
+import Guild from "./models/guild";
 import MusicPlayer from "./music/musicplayer";
 import CommandManager from "./util/commandManager";
 import FunReplies from "./util/funReplies";
@@ -20,6 +21,13 @@ class Bot
 
     onReady() {
         console.log(`Logged in as ${Bot.client.user.tag}`);
+        for (const k in Bot.client.guilds.cache.entries()) {
+            const guild = Bot.client.guilds.resolve(k);
+            Guild.findOrCreate({
+                where: { id: k },
+                defaults: { id: k, name: guild.name }
+            });
+        }
         console.log(`Registering commands...`);
         CommandManager.init(Bot.client);
         CommandManager.handleInteractionEvent();

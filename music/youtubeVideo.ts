@@ -1,10 +1,10 @@
 import request = require("request");
 import youtubeSearch = require("youtube-search-api");
 import YouTube = require("ytube-api");
-import Database from "../util/database";
 import moment = require("moment");
 import mdfSetup = require("moment-duration-format");
 import { Client, MessageEmbed } from "discord.js";
+import Setting from "../models/setting";
 
 mdfSetup(moment);
 
@@ -34,7 +34,16 @@ class YoutubeVideo
         this.exists = false;
         this.ready = new Promise<YoutubeVideo>((resolve, reject) => {
             const youtube = new YouTube();
-            Database.getSetting("youtube-api-key", "YOUR API KEY HERE").then(key => {
+            Setting.findOrCreate({
+                where: {
+                    name: "youtube-api-key",
+                },
+                defaults: {
+                    name: "youtube-api-key",
+                    value: "YOUTUBE API KEY HERE",
+                }
+            }).then(row => {
+                const key = row[0].value;
                 youtube.setKey(key);
                 youtube.getById([videoID], (err, res) => {
                     if (err) {
