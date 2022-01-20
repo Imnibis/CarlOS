@@ -73,9 +73,11 @@ class CommandManager
                     const updatedGuild = await this.client.guilds.fetch(guildID)
                     const fullPermissions = updatedGuild.commands.cache.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
                         const roles = getRoles(x.name);
+                        console.log(x.name);
                         if (!roles) return accumulator;
 
                         const permissions = roles.reduce<ApplicationCommandPermissionData[]>((a, v) => {
+                            console.log(v.name);
                             return [
                                 ...a,
                                 {
