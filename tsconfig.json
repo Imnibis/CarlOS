@@ -1,7 +1,12 @@
 {
     "compilerOptions": {
         "outDir": "./build",
+        "moduleResolution": "node",
         "resolveJsonModule": true,
-        "allowJs": true
+        "allowJs": true,
+        "target": "es6",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true
     }
 }

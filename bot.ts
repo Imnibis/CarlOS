@@ -1,5 +1,5 @@
 import { Client, Intents, Message } from "discord.js";
-import Guild from "./models/guild";
+import Guild from "./models/guild.model";
 import MusicPlayer from "./music/musicplayer";
 import CommandManager from "./util/commandManager";
 import FunReplies from "./util/funReplies";

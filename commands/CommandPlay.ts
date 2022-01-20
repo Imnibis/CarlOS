@@ -2,7 +2,6 @@ import { Client, CommandInteraction, GuildMember, MessageEmbed, VoiceChannel } f
 import ArgType from "../util/argtype";
 import Command from "../util/command";
 import * as youtubeSearch from "youtube-search";
-import Database from "../util/database";
 import YoutubeVideo from "../music/youtubeVideo";
 import { InteractionResponseType } from "discord-api-types";
 import MusicQueue from "../music/musicqueue";

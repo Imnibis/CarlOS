@@ -1,5 +1,4 @@
 import { Guild, GuildMember } from "discord.js";
-import Database from "../util/database";
 import Music from "./music";
 import MusicPlayer from "./musicplayer";
 import YoutubeVideo from "./youtubeVideo";

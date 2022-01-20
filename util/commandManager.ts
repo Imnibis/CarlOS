@@ -12,13 +12,11 @@ import CommandResume from "../commands/CommandResume";
 import CommandSearch from "../commands/CommandSearch";
 import CommandSkip from "../commands/CommandSkip";
 import Command from "./command";
-import Database from "./database";
 
 class CommandManager
 {
     static commands: Command[] = []
     static client: Client;
-    static db: Database;
 
     static init(client: Client)
     {

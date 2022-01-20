@@ -1,7 +1,6 @@
 import { Client, CommandInteraction, CommandInteractionOptionResolver, Interaction } from "discord.js";
 import ArgType from "../util/argtype";
 import Command from "../util/command";
-import Database from "../util/database";
 
 class CommandPing extends Command
 {

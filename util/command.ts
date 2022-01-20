@@ -1,7 +1,6 @@
 import { ApplicationCommandOption, Client, CommandInteraction, CommandInteractionOptionResolver, Interaction, MessageEmbed } from "discord.js";
 import ArgType from "./argtype";
 import CommandManager from "./commandManager";
-import Database from "./database";
 
 class Command
 {

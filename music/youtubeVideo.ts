@@ -1,10 +1,10 @@
-import request = require("request");
-import youtubeSearch = require("youtube-search-api");
-import YouTube = require("ytube-api");
-import moment = require("moment");
-import mdfSetup = require("moment-duration-format");
+import * as request from "request";
+import * as youtubeSearch from "youtube-search-api";
+import * as YouTube from "ytube-api";
+import * as moment from "moment";
+import mdfSetup from "moment-duration-format";
 import { Client, MessageEmbed } from "discord.js";
-import Setting from "../models/setting";
+import Setting from "../models/setting.model";
 
 mdfSetup(moment);
 

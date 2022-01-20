@@ -1,5 +1,5 @@
 import * as settings from "../settings.json"
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 
 const sequelize = new Sequelize(settings.database, settings.user, settings.password, {
     host: settings.host,
@@ -8,7 +8,8 @@ const sequelize = new Sequelize(settings.database, settings.user, settings.passw
     define: {
         timestamps: false,
         underscored: true,
-    }
+    },
+    models: [__dirname + '/../models'],
 });
 
 export { Sequelize, sequelize };
