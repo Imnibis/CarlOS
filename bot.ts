@@ -21,13 +21,13 @@ class Bot
 
     onReady() {
         console.log(`Logged in as ${Bot.client.user.tag}`);
-        for (const k in Bot.client.guilds.cache.entries()) {
-            const guild = Bot.client.guilds.resolve(k);
+        
+        Bot.client.guilds.cache.forEach(guild => {
             Guild.findOrCreate({
-                where: { id: k },
-                defaults: { id: k, name: guild.name }
+                where: { id: guild.id },
+                defaults: { id: guild.id, name: guild.name }
             });
-        }
+        });
         console.log(`Registering commands...`);
         CommandManager.init(Bot.client);
         CommandManager.handleInteractionEvent();
