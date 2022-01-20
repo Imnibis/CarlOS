@@ -2,7 +2,7 @@ import * as request from "request";
 import * as youtubeSearch from "youtube-search-api";
 import * as YouTube from "ytube-api";
 import * as moment from "moment";
-import mdfSetup from "moment-duration-format";
+const mdfSetup = require("moment-duration-format");
 import { Client, MessageEmbed } from "discord.js";
 import Setting from "../models/setting.model";
 
