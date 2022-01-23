@@ -50,7 +50,7 @@ class CommandManager
         this.commands.forEach(command => {
             if (command.apiObject.userPermissions !== undefined &&
                 command.apiObject.userPermissions !== null)
-                command.apiObject.defaultPermission = false;
+                command.apiObject.default_permission = false;
             console.log(command.apiObject);
             apiCommands.push(command.apiObject);
         });

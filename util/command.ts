@@ -7,7 +7,7 @@ class Command
     apiObject: {"name": string, "description": string, "options": {"type": number,
         "name": string, "description": string, "choices"?: {"name": string,
         "value": string}[], "required"?: boolean}[], "userPermissions"?: string[],
-        "defaultPermission"?: boolean}
+        "default_permission"?: boolean}
     subcommands: Command[] = [];
     
     constructor(name: string, description: string, subcommand: boolean = false)
