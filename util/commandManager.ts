@@ -66,6 +66,7 @@ class CommandManager
                             (x) => x.name === commandName
                         ).userPermissions;
             
+                        console.log(guildRoles);
                         if (!permissions) return null;
                         return guildRoles.filter(
                             (x) => x.permissions.has(permissions) && !x.managed
