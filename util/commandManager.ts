@@ -60,13 +60,14 @@ class CommandManager
                     const appID = this.client.application.id;
                     const guildID = guild.id;
                     await rest.put(Routes.applicationGuildCommands(appID, guildID), {body: apiCommands},);
+                    const guildRoles = await guild.roles.fetch();
                     const getRoles = (commandName) => {
                         const permissions = apiCommands.find(
                             (x) => x.name === commandName
                         ).userPermissions;
             
                         if (!permissions) return null;
-                        return guild.roles.cache.filter(
+                        return guildRoles.filter(
                             (x) => x.permissions.has(permissions) && !x.managed
                         );
                     };
