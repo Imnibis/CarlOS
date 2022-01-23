@@ -70,7 +70,8 @@ class CommandManager
                             (x) => x.permissions.has(permissions) && !x.managed
                         );
                     };
-                    const fullPermissions = guild.commands.cache.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
+                    const commands = await guild.commands.fetch();
+                    const fullPermissions = commands.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
                         const roles = getRoles(x.name);
                         console.log(x.name);
                         if (!roles) return accumulator;
