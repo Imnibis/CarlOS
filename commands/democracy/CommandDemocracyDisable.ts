@@ -12,22 +12,12 @@ export default class CommandDemocracyDisable extends Command
     async run(client: Client, interaction: CommandInteraction): Promise<void>
     {
         const guild = await Guild.findOne({where: {id: interaction.guildId}})
-        guild.$get('settings').then(settings => {
-            let democracySetting = settings.find(x => x.name === 'democracy');
-            let promise;
-
-            if (democracySetting)
-                promise = democracySetting.update({value: false})
-            else
-                promise = guild.$create('setting', {name: 'democracy', value: false})
-            promise.then(() => {
-                const embed = new MessageEmbed()
-                    .setColor("#00bfff")
-                    .setTitle("Succès")
-                    .setDescription("Démocratie déactivée!")
-                    .setFooter(client.user.username, client.user.avatarURL());
-                interaction.reply({embeds: [embed]})
-            })
-        })
+        await guild.setSetting('democracy', false);
+        const embed = new MessageEmbed()
+            .setColor("#00bfff")
+            .setTitle("Succès")
+            .setDescription("Démocratie désactivée!")
+            .setFooter(client.user.username, client.user.avatarURL());
+        interaction.reply({embeds: [embed]})
     }
 }

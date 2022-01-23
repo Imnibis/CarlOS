@@ -12,6 +12,20 @@ class Guild extends Model {
 
     @HasMany(() => GuildSetting)
     settings: GuildSetting[]
+
+    setSetting<T>(name: string, value: T) : Promise<GuildSetting>
+    {
+        let promise: Promise<GuildSetting>;
+        this.$get('settings').then((settings: GuildSetting[]) => {
+            let democracySetting = settings.find(x => x.name === name);
+
+            if (democracySetting)
+                promise = democracySetting.update({value: value})
+            else
+                promise = this.$create('setting', {name: name, value: value})
+        });
+        return promise;
+    }
 }
 
 export default Guild;
