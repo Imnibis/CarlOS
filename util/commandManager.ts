@@ -11,6 +11,7 @@ import CommandRemove from "../commands/CommandRemove";
 import CommandResume from "../commands/CommandResume";
 import CommandSearch from "../commands/CommandSearch";
 import CommandSkip from "../commands/CommandSkip";
+import CommandDemocracy from "../commands/democracy/CommandDemocracy";
 import Command from "./command";
 
 class CommandManager
@@ -30,6 +31,7 @@ class CommandManager
         const remove = new CommandRemove();
         const pause = new CommandPause();
         const resume = new CommandResume();
+        const democracy = new CommandDemocracy();
         const channel = new CommandChannel();
 
         this.putCommands();
