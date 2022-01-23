@@ -74,6 +74,7 @@ class CommandManager
                     const fullPermissions = commands.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
                         const roles = getRoles(x.name);
                         console.log(x.name);
+                        console.log(roles);
                         if (!roles) return accumulator;
                         const permissions = roles.reduce<ApplicationCommandPermissionData[]>((a, v) => {
                             console.log(v.name);
