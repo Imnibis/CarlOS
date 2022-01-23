@@ -1,9 +1,10 @@
-import { BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript"
+import { AutoIncrement, BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript"
 import Guild from "./guild.model"
 
 @Table
 class GuildSetting extends Model {
     @PrimaryKey
+    @AutoIncrement
     @Column
     id: number
 
