@@ -48,8 +48,10 @@ class CommandManager
         console.log("Sending commands to Discord...");
         let apiCommands = [];
         this.commands.forEach(command => {
-            if (command.apiObject.userPermissions)
+            if (command.apiObject.userPermissions !== undefined &&
+                command.apiObject.userPermissions !== null)
                 command.apiObject.defaultPermission = false;
+            console.log(command.apiObject);
             apiCommands.push(command.apiObject);
         });
         
@@ -66,7 +68,6 @@ class CommandManager
                             (x) => x.name === commandName
                         ).userPermissions;
             
-                        console.log(guildRoles);
                         if (!permissions) return null;
                         return guildRoles.filter(
                             (x) => x.permissions.has(permissions) && !x.managed
@@ -75,11 +76,8 @@ class CommandManager
                     const commands = await guild.commands.fetch();
                     const fullPermissions = commands.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
                         const roles = getRoles(x.name);
-                        console.log(x.name);
-                        console.log(roles);
                         if (!roles) return accumulator;
                         const permissions = roles.reduce<ApplicationCommandPermissionData[]>((a, v) => {
-                            console.log(v.name);
                             return [
                                 ...a,
                                 {
@@ -98,7 +96,6 @@ class CommandManager
                             },
                         ];
                     }, []);
-                    console.log(fullPermissions)
                     guild.commands.permissions.set({fullPermissions});
                 } catch (error) {
                     console.log(error);
