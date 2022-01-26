@@ -34,23 +34,9 @@ class Guild extends Model {
                 let setting = settings.find(x => x.name === name);
     
                 if (setting)
-                    resolve(null);
+                    resolve(setting.value as unknown as T);
                 else
-                    resolve(setting.value as unknown as T)
-            });
-        });
-    }
-
-    getSettingBool(name: string) : Promise<boolean>
-    {
-        return new Promise((resolve, reject) => {
-            this.$get('settings').then((settings: GuildSetting[]) => {
-                let setting = settings.find(x => x.name === name);
-    
-                if (setting)
-                    resolve(null);
-                else
-                    resolve(setting.value === '1')
+                    resolve(null)
             });
         });
     }

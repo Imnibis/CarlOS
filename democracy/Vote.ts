@@ -22,7 +22,7 @@ export default class Vote
     {
         return new Promise(async (resolve, reject) => {
             const dbGuild = await Guild.findByPk(guild.id);
-            const isDemocratic = await dbGuild.getSettingBool('democracy');
+            const isDemocratic = await dbGuild.getSetting<boolean>('democracy');
             const hasVoteChannel = await dbGuild.getSetting<string>('voteChannel') !== null;
             let error = null;
             
