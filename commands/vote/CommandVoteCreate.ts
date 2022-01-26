@@ -14,6 +14,8 @@ export default class CommandVoteCreate extends Command
 
     async run(client: Client, interaction: CommandInteraction): Promise<void>
     {
+        if (!await Vote.checkGuild(interaction.guild, interaction.reply))
+            return;
         const res = Vote.create(
             interaction.member as GuildMember,
             interaction.options.getString('nom'),

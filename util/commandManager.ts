@@ -55,7 +55,6 @@ class CommandManager
             if (command.apiObject.userPermissions !== undefined &&
                 command.apiObject.userPermissions !== null)
                 command.apiObject.default_permission = false;
-            console.log(command.apiObject);
             apiCommands.push(command.apiObject);
         });
         
