@@ -9,7 +9,7 @@ const sequelize = new Sequelize(settings.database, settings.user, settings.passw
         timestamps: false,
         underscored: true,
     },
-    models: [__dirname + '/../models'],
+    models: [__dirname + '/../models'], // Importation des models
 });
 
 export { Sequelize, sequelize };

@@ -17,14 +17,28 @@ class Guild extends Model {
     {
         let promise: Promise<GuildSetting>;
         this.$get('settings').then((settings: GuildSetting[]) => {
-            let democracySetting = settings.find(x => x.name === name);
+            let setting = settings.find(x => x.name === name);
 
-            if (democracySetting)
-                promise = democracySetting.update({value: value})
+            if (setting)
+                promise = setting.update({value: value})
             else
                 promise = this.$create('setting', {name: name, value: value})
         });
         return promise;
+    }
+
+    getSetting<T>(name: string) : Promise<T>
+    {
+        return new Promise((resolve, reject) => {
+            this.$get('settings').then((settings: GuildSetting[]) => {
+                let setting = settings.find(x => x.name === name);
+    
+                if (setting)
+                    resolve(null);
+                else
+                    resolve(setting.value as unknown as T)
+            });
+        });
     }
 }
 

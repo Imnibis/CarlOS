@@ -12,6 +12,7 @@ import CommandResume from "../commands/CommandResume";
 import CommandSearch from "../commands/CommandSearch";
 import CommandSkip from "../commands/CommandSkip";
 import CommandDemocracy from "../commands/democracy/CommandDemocracy";
+import CommandVote from "../commands/vote/CommandVote";
 import Command from "./command";
 
 class CommandManager
@@ -32,6 +33,7 @@ class CommandManager
         const pause = new CommandPause();
         const resume = new CommandResume();
         const democracy = new CommandDemocracy();
+        const vote = new CommandVote();
         const channel = new CommandChannel();
 
         this.putCommands();
