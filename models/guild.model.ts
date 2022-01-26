@@ -40,6 +40,20 @@ class Guild extends Model {
             });
         });
     }
+
+    getSettingBool(name: string) : Promise<boolean>
+    {
+        return new Promise((resolve, reject) => {
+            this.$get('settings').then((settings: GuildSetting[]) => {
+                let setting = settings.find(x => x.name === name);
+    
+                if (setting)
+                    resolve(null);
+                else
+                    resolve(setting.value === '1')
+            });
+        });
+    }
 }
 
 export default Guild;

@@ -28,7 +28,7 @@ class CommandChannelAdd extends Command
         } else {
             Vote.addAction({
                 name: 'Création de channel',
-                description: `Créer le channel #${name}`,
+                description: `Créer le channel #${name} dans la catégorie ${category.name}`,
                 severity: 5,
                 exec: () => {
                     interaction.guild.channels.create(name, {parent: category as CategoryChannel})
