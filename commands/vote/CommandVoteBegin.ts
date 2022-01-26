@@ -11,7 +11,7 @@ export default class CommandVoteBegin extends Command
 
     async run(client: Client, interaction: CommandInteraction): Promise<void>
     {
-        if (!await Vote.checkGuild(interaction.guild, interaction.reply))
+        if (!await Vote.checkGuild(interaction.guild, interaction.reply.bind(interaction)))
             return;
         const res = await Vote.begin(
             interaction.member as GuildMember,
