@@ -26,6 +26,8 @@ export default class Vote
             const hasVoteChannel = await dbGuild.getSetting<string>('voteChannel') !== null;
             let error = null;
             
+            console.log(isDemocratic);
+            console.log(await await dbGuild.getSetting<string>('democracy'))
             if (!isDemocratic) error = "Ce serveur n'est pas démocratique.";
             else if (!hasVoteChannel) error = "Aucun channel de vote n'a été défini";
             if (error) {
@@ -120,12 +122,12 @@ export default class Vote
             .addComponents([
                 new Discord.MessageButton()
                     .setCustomId('yesVote')
-                    .setEmoji(':thumbsup:')
+                    .setEmoji('👍')
                     .setLabel('Pour')
                     .setStyle('SUCCESS'),
                 new Discord.MessageButton()
                     .setCustomId('noVote')
-                    .setEmoji(':thumbsdown:')
+                    .setEmoji('👎')
                     .setLabel('Contre')
                     .setStyle('DANGER')
             ]);
