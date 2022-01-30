@@ -4,10 +4,11 @@ import Guild from "../models/guild.model";
 
 type Action = {name: string, description: string, severity: number, exec: () => void}
 type ReplyFunction = (options: string | Discord.InteractionReplyOptions | Discord.MessagePayload) => Promise<void>
+type MemberVotes = {current: Vote, began: Vote[]};
 
 export default class Vote
 {
-    static guildVotes: {[id: string]: {[id: string]: Vote}} = {};
+    static guildVotes: {[id: string]: {[id: string]: MemberVotes}} = {};
     guild: Discord.Guild
     name: string
     description: string
@@ -26,8 +27,6 @@ export default class Vote
             const hasVoteChannel = await dbGuild.getSetting<string>('voteChannel') !== null;
             let error = null;
             
-            console.log(isDemocratic);
-            console.log(await await dbGuild.getSetting<string>('democracy'))
             if (!isDemocratic) error = "Ce serveur n'est pas démocratique.";
             else if (!hasVoteChannel) error = "Aucun channel de vote n'a été défini";
             if (error) {
@@ -50,44 +49,55 @@ export default class Vote
 
         if (!await this.checkGuild(guild, reply))
             return;
-        if (!(guild.id in this.guildVotes))
-            this.guildVotes[guild.id] = {};
-        if (!(member.id in this.guildVotes[guild.id])) {
-            standalone = true;
-            this.guildVotes[guild.id][member.id] = new Vote(guild, "Vote");
-        }
-        const vote = this.guildVotes[guild.id][member.id]
+        standalone = !!this.create(member, "Vote");
+        const vote = this.guildVotes[guild.id][member.id].current
         vote.actions.push(action);
-        const embed = new Discord.MessageEmbed()
+        let embed = new Discord.MessageEmbed()
             .setColor("#00bfff")
             .setTitle("Succès")
             .setDescription(`Action "${action.description}" ajoutée au vote "${vote.name}"`)
             .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         
-        if (standalone) await vote.sendMessage();
-        else reply({embeds: [embed], ephemeral: true});
+        if (standalone) {
+            await vote.sendMessage();
+            embed = new Discord.MessageEmbed()
+                .setColor("#00bfff")
+                .setTitle("Vote commencé !")
+                .setDescription("Le vote a commencé dans le channel de vote !")
+                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+        }
+        reply({embeds: [embed], ephemeral: true});
     }
 
-    static create(member: Discord.GuildMember, name: string, description?: string): boolean
+    static create(member: Discord.GuildMember, name: string, description?: string): Vote
+    {
+        const memberVotes = this.getMemberVotes(member);
+        if (!memberVotes.current)
+            return (memberVotes.current = new Vote(member.guild, name, description));
+        else
+            return null;
+    }
+
+    static getMemberVotes(member: Discord.GuildMember): MemberVotes
     {
         const guild = member.guild;
         if (!(guild.id in this.guildVotes))
             this.guildVotes[guild.id] = {};
         if (!(member.id in this.guildVotes[guild.id])) {
-            this.guildVotes[guild.id][member.id] = new Vote(guild, name, description);
-            return true;
-        } else return false;
+            this.guildVotes[guild.id][member.id] = {current: null, began: []};
+        }
+        return this.guildVotes[guild.id][member.id];
     }
 
     static async begin(member: Discord.GuildMember): Promise<boolean>
     {
-        const guild = member.guild;
-        if (!(guild.id in this.guildVotes))
-            this.guildVotes[guild.id] = {};
-        if (!(member.id in this.guildVotes[guild.id]))
+        const memberVotes = this.getMemberVotes(member);
+        if (!memberVotes.current)
             return false;
         else {
-            await this.guildVotes[guild.id][member.id].sendMessage();
+            await memberVotes.current.sendMessage();
+            memberVotes.began.push(memberVotes.current)
+            memberVotes.current = null;
             return true;
         }
     }
