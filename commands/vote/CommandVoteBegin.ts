@@ -23,14 +23,14 @@ export default class CommandVoteBegin extends Command
                 .setTitle("Vote commencé !")
                 .setDescription("Le vote a commencé dans le channel de vote !")
                 .setFooter(client.user.username, client.user.avatarURL());
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed]});
         } else {
             const embed = new MessageEmbed()
                 .setColor("#ff0000")
                 .setTitle("Erreur")
                 .setDescription("Il n'y a aucun vote à commencer.")
                 .setFooter(client.user.username, client.user.avatarURL());
-            await interaction.reply({embeds: [embed], ephemeral: true})
+            await interaction.reply({embeds: [embed]})
         }
     }
 }

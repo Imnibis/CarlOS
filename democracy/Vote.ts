@@ -65,7 +65,7 @@ export default class Vote
                 .setDescription("Le vote a commencé dans le channel de vote !")
                 .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         }
-        reply({embeds: [embed], ephemeral: true});
+        reply({embeds: [embed]});
     }
 
     static create(member: Discord.GuildMember, name: string, description?: string): Vote
@@ -160,5 +160,26 @@ export default class Vote
         const voteChannel = await this.guild.channels.fetch(voteChannelId) as Discord.TextChannel;
         
         const message = await voteChannel.send({embeds: [this.getEmbed()], components: [this.getButtons()]});
+        const collector = await message.createMessageComponentCollector({componentType: 'BUTTON'});
+        collector.on('collect', (interaction: Discord.ButtonInteraction) => {
+            if (interaction.customId === 'yesVote') {
+                const noVoteIndex = this.noVoters.findIndex(member => member.user.id === interaction.user.id)
+                if (noVoteIndex !== -1)
+                    this.noVoters.splice(noVoteIndex, 1);
+                const yesVoteIndex = this.yesVoters.findIndex(member => member.user.id === interaction.user.id)
+                if (yesVoteIndex !== -1)
+                    this.yesVoters.splice(yesVoteIndex, 1);
+                else this.yesVoters.push(interaction.member as Discord.GuildMember);
+            } else {
+                const yesVoteIndex = this.yesVoters.findIndex(member => member.user.id === interaction.user.id)
+                if (yesVoteIndex !== -1)
+                    this.yesVoters.splice(yesVoteIndex, 1);
+                const noVoteIndex = this.noVoters.findIndex(member => member.user.id === interaction.user.id)
+                if (noVoteIndex !== -1)
+                    this.noVoters.splice(noVoteIndex, 1);
+                else this.noVoters.push(interaction.member as Discord.GuildMember);
+            }
+            interaction.update({embeds: [this.getEmbed()], components: [this.getButtons()]})
+        })
     }
 }

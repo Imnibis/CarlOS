@@ -23,14 +23,14 @@ export default class CommandVoteDiscard extends Command
                 .setTitle("Vote annulé")
                 .setDescription("Le vote a été annulé.")
                 .setFooter(client.user.username, client.user.avatarURL());
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed]});
         } else {
             const embed = new MessageEmbed()
                 .setColor("#ff0000")
                 .setTitle("Erreur")
                 .setDescription("Il n'y a aucun vote à annuler.")
                 .setFooter(client.user.username, client.user.avatarURL());
-            await interaction.reply({embeds: [embed], ephemeral: true})
+            await interaction.reply({embeds: [embed]})
         }
     }
 }

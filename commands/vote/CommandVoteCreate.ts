@@ -47,7 +47,7 @@ export default class CommandVoteCreate extends Command
                         .setTitle("Erreur")
                         .setDescription("Seul la personne ayant créé le vote peut le commencer.")
                         .setFooter(client.user.username, client.user.avatarURL());
-                    await inter.reply({embeds: [embed], ephemeral: true})
+                    await inter.reply({embeds: [embed]})
                     return;
                 }
                 const res = await Vote.begin(interaction.member as GuildMember);
@@ -57,14 +57,14 @@ export default class CommandVoteCreate extends Command
                         .setTitle("Vote commencé !")
                         .setDescription("Le vote a commencé dans le channel de vote !")
                         .setFooter(client.user.username, client.user.avatarURL());
-                    await inter.reply({embeds: [embed], ephemeral: true})
+                    await inter.reply({embeds: [embed]})
                 } else {
                     const embed = new MessageEmbed()
                         .setColor("#ff0000")
                         .setTitle("Erreur")
                         .setDescription("Il n'y a aucun vote à commencer.")
                         .setFooter(client.user.username, client.user.avatarURL());
-                    await inter.reply({embeds: [embed], ephemeral: true})
+                    await inter.reply({embeds: [embed]})
                 }
             });
         } else {
@@ -73,7 +73,7 @@ export default class CommandVoteCreate extends Command
                 .setTitle("Erreur")
                 .setDescription("Vous avez déjà un vote en cours de création.")
                 .setFooter(client.user.username, client.user.avatarURL());
-            await interaction.reply({embeds: [embed], ephemeral: true})
+            await interaction.reply({embeds: [embed]})
         }
     }
 }

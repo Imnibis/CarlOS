@@ -7,7 +7,6 @@ class CommandChannel extends Command
     constructor() 
     {
         super("channel", "Créer, supprimer ou modifier un channel");
-        this.requirePermission("ADMINISTRATOR");
         this.addSubcommand(new CommandChannelAdd());
         this.register();
     }
