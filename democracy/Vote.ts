@@ -27,6 +27,7 @@ export default class Vote
             const hasVoteChannel = await dbGuild.getSetting<string>('voteChannel') !== null;
             let error = null;
             
+            console.log(typeof(isDemocratic), isDemocratic);
             if (!isDemocratic) error = "Ce serveur n'est pas démocratique.";
             else if (!hasVoteChannel) error = "Aucun channel de vote n'a été défini";
             if (error) {
@@ -36,9 +37,8 @@ export default class Vote
                     .setDescription(error)
                     .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
                 reply({embeds:[embed]});
-                return resolve(false);
-            }
-            resolve(true);
+                resolve(false);
+            } else resolve(true);
         });
     }
 

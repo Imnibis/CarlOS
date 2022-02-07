@@ -18,6 +18,7 @@ class CommandChannelAdd extends Command
         super.run(client, interaction);
         const name = interaction.options.getString("nom");
         const category = interaction.options.getChannel("catégorie", true);
+        const guild = interaction.guild;
         if (category.type !== "GUILD_CATEGORY") {
             const embed = new MessageEmbed()
                 .setColor("#ff0000")
@@ -31,25 +32,7 @@ class CommandChannelAdd extends Command
                 description: `Créer le channel #${name} dans la catégorie ${category.name}`,
                 severity: 5,
                 exec: () => {
-                    interaction.guild.channels.create(name, {parent: category as CategoryChannel})
-                        .then(
-                            res => {
-                                const embed = new MessageEmbed()
-                                    .setColor("#00bfff")
-                                    .setTitle("Succès")
-                                    .setDescription("Channel créé")
-                                    .setFooter(client.user.username, client.user.avatarURL());
-                                interaction.reply({embeds:[embed], ephemeral: true});
-                            },
-                            err => {
-                                const embed = new MessageEmbed()
-                                    .setColor("#ff0000")
-                                    .setTitle("Erreur")
-                                    .setDescription("Le channel n'a pas pu être créé.")
-                                    .setFooter(client.user.username, client.user.avatarURL());
-                                interaction.reply({embeds:[embed], ephemeral: true});
-                            }
-                        )
+                    guild.channels.create(name, {parent: category as CategoryChannel})
                 }
             }, interaction.member as GuildMember, interaction.reply.bind(interaction))
         }
