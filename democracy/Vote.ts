@@ -23,8 +23,8 @@ export default class Vote
     {
         return new Promise(async (resolve, reject) => {
             const dbGuild = await Guild.findByPk(guild.id);
-            const isDemocratic = await dbGuild.getSetting<number>('democracy');
-            const hasVoteChannel = await dbGuild.getSetting<string>('voteChannel') !== null;
+            const isDemocratic = await dbGuild.getSettingBool('democracy');
+            const hasVoteChannel = await dbGuild.getSetting('voteChannel') !== null;
             let error = null;
             
             console.log(typeof(isDemocratic), isDemocratic);
@@ -148,7 +148,7 @@ export default class Vote
     async sendMessage(): Promise<void>
     {
         const dbGuild = await Guild.findByPk(this.guild.id);
-        const voteChannelId = await dbGuild.getSetting<string>('voteChannel');
+        const voteChannelId = await dbGuild.getSetting('voteChannel');
         const voteChannel = await this.guild.channels.fetch(voteChannelId) as Discord.TextChannel;
         
         const message = await voteChannel.send({embeds: [this.getEmbed()], components: [this.getButtons()]});

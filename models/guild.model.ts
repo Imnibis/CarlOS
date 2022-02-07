@@ -27,18 +27,26 @@ class Guild extends Model {
         return promise;
     }
 
-    getSetting<T>(name: string) : Promise<T>
+    async getSetting(name: string) : Promise<string>
     {
-        return new Promise((resolve, reject) => {
-            this.$get('settings').then((settings: GuildSetting[]) => {
-                let setting = settings.find(x => x.name === name);
-    
-                if (setting)
-                    resolve(setting.value as unknown as T);
-                else
-                    resolve(null)
-            });
-        });
+        const settings = await this.$get('settings')
+        let setting = settings.find(x => x.name === name);
+
+        return setting?.value;
+    }
+
+    async getSettingNumber(name: string) : Promise<number>
+    {
+        const setting = this.getSetting(name);
+
+        return Number(setting);
+    }
+
+    async getSettingBool(name: string) : Promise<boolean>
+    {
+        const setting = this.getSetting(name);
+
+        return Boolean(setting);
     }
 }
 
