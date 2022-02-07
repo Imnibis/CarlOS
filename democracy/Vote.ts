@@ -72,6 +72,7 @@ export default class Vote
     static create(member: Discord.GuildMember, name: string, description?: string): Vote
     {
         const memberVotes = this.getMemberVotes(member);
+        console.log(JSON.stringify(memberVotes));
         if (!memberVotes.current)
             return (memberVotes.current = new Vote(member.guild, name, description));
         else
