@@ -27,7 +27,6 @@ export default class Vote
             const hasVoteChannel = await dbGuild.getSetting('voteChannel') !== null;
             let error = null;
             
-            console.log(typeof(isDemocratic), isDemocratic);
             if (!isDemocratic) error = "Ce serveur n'est pas démocratique.";
             else if (!hasVoteChannel) error = "Aucun channel de vote n'a été défini";
             if (error) {
@@ -72,11 +71,19 @@ export default class Vote
     static create(member: Discord.GuildMember, name: string, description?: string): Vote
     {
         const memberVotes = this.getMemberVotes(member);
-        console.log(JSON.stringify(memberVotes));
         if (!memberVotes.current)
             return (memberVotes.current = new Vote(member.guild, name, description));
         else
             return null;
+    }
+
+    static discard(member: Discord.GuildMember): boolean
+    {
+        const memberVotes = this.getMemberVotes(member);
+        if (!memberVotes.current) return false;
+        else {
+            memberVotes.current = null;
+        }
     }
 
     static getMemberVotes(member: Discord.GuildMember): MemberVotes

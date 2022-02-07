@@ -36,13 +36,20 @@ export default class CommandVoteCreate extends Command
                         .setLabel('Commencer le vote')
                         .setStyle('PRIMARY')
                 )
-            await interaction.reply({embeds: [embed], components: [row], ephemeral: true});
+            await interaction.reply({embeds: [embed], components: [row]});
             const msg = await interaction.fetchReply() as Message;
             const collector = msg.createMessageComponentCollector({componentType:'BUTTON'});
             
             collector.on('collect', async (inter: ButtonInteraction) => {
-                if (interaction.user.id !== inter.user.id)
+                if (interaction.user.id !== inter.user.id) {
+                    const embed = new MessageEmbed()
+                        .setColor("#ff0000")
+                        .setTitle("Erreur")
+                        .setDescription("Seul la personne ayant créé le vote peut le commencer.")
+                        .setFooter(client.user.username, client.user.avatarURL());
+                    await inter.reply({embeds: [embed], ephemeral: true})
                     return;
+                }
                 const res = await Vote.begin(interaction.member as GuildMember);
                 if (res) {
                     const embed = new MessageEmbed()
