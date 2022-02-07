@@ -44,7 +44,7 @@ class Guild extends Model {
 
     async getSettingBool(name: string) : Promise<boolean>
     {
-        const setting = this.getSetting(name);
+        const setting = this.getSettingNumber(name);
 
         return Boolean(setting);
     }
