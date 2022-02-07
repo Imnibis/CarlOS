@@ -59,7 +59,7 @@ export default class Vote
             .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         
         if (standalone) {
-            await vote.sendMessage();
+            await this.begin(member);
             embed = new Discord.MessageEmbed()
                 .setColor("#00bfff")
                 .setTitle("Vote commencé !")
