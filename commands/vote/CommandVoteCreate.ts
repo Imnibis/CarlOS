@@ -32,7 +32,7 @@ export default class CommandVoteCreate extends Command
                 .addComponents(
                     new MessageButton()
                         .setCustomId('beginVote')
-                        .setEmoji(':white_check_mark:')
+                        .setEmoji('✅')
                         .setLabel('Commencer le vote')
                         .setStyle('PRIMARY')
                 )
