@@ -49,7 +49,7 @@ class CommandManager
                     const guildRoles = await guild.roles.fetch();
                     const getRoles = (commandName) => {
                         const permissions = commands.find(
-                            (x) => x.name === commandName
+                            (x) => x.data.name === commandName
                         ).permissions;
             
                         if (!permissions) return null;
