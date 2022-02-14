@@ -40,9 +40,10 @@ class CommandManager
             if (command.subcommands !== undefined &&
                 command.subcommands !== null) {
                 command.subcommands.forEach(subcommand => {
-                    (command.data as SlashCommandBuilder).addSubcommand(subcommand.data)
+                    console.log(`Registering command /${command.data.name} ${subcommand.data.name}`);
+                    (command.data as SlashCommandBuilder).addSubcommand(subcommand.data);
                 })
-            }
+            } else console.log(`Registering command /${command.data.name}`);
             commands.push(command.data.toJSON());
             this.commands.push(command);
         }
