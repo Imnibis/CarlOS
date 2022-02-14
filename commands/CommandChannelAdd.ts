@@ -1,10 +1,9 @@
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
 import { ChannelType } from "discord-api-types";
 import { CategoryChannel, Client, CommandInteraction, GuildChannel, GuildMember, MessageEmbed } from "discord.js";
-import Bot from "../../bot";
-import Vote from "../../democracy/Vote";
-import ArgType from "../../util/argtype";
-import { Subcommand } from "../../util/subcommand";
+import Bot from "../bot";
+import Vote from "../democracy/Vote";
+import { Subcommand } from "../util/subcommand";
 
 class CommandChannelAdd implements Subcommand
 {

@@ -1,16 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import { ApplicationCommandPermissionData, Client, Collection, GuildApplicationCommandPermissionData } from "discord.js";
-import CommandChannel from "../commands/channel/CommandChannel";
-import CommandPause from "../commands/CommandPause";
-import CommandPlay from "../commands/CommandPlay";
-import CommandQueue from "../commands/CommandQueue";
-import CommandRemove from "../commands/CommandRemove";
-import CommandResume from "../commands/CommandResume";
-import CommandSearch from "../commands/CommandSearch";
-import CommandSkip from "../commands/CommandSkip";
-import CommandDemocracy from "../commands/democracy/CommandDemocracy";
-import CommandVote from "../commands/vote/CommandVote";
+import { ApplicationCommandPermissionData, Client, GuildApplicationCommandPermissionData } from "discord.js";
 import Command from "./command";
 import * as fs from "fs";
 import { SlashCommandBuilder } from "@discordjs/builders";
@@ -31,7 +21,6 @@ class CommandManager
         if (this.client === undefined) {
             throw new Error("A client needs to be assigned before you can register a command.");
         }
-        console.log("Sending commands to Discord...");
         let commands = [];
         const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.ts'));
 
@@ -40,14 +29,15 @@ class CommandManager
             if (command.subcommands !== undefined &&
                 command.subcommands !== null) {
                 command.subcommands.forEach(subcommand => {
-                    console.log(`Registering command /${command.data.name} ${subcommand.data.name}`);
+                    console.log(`Registering command /${command.data?.name} ${subcommand.data.name}`);
                     (command.data as SlashCommandBuilder).addSubcommand(subcommand.data);
                 })
-            } else console.log(`Registering command /${command.data.name}`);
+            } else console.log(`Registering command /${command.data?.name}`);
             commands.push(command.data.toJSON());
             this.commands.push(command);
         }
         
+        console.log("Sending commands to Discord...");
         const rest = new REST({version: '9'}).setToken(this.client.token);
         this.client.guilds.cache.forEach((guild) => {
             (async () => {

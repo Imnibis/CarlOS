@@ -1,8 +1,8 @@
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
 import { ButtonInteraction, Client, CommandInteraction, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
-import Bot from "../../bot";
-import Vote from "../../democracy/Vote";
-import { Subcommand } from "../../util/subcommand";
+import Bot from "../bot";
+import Vote from "../democracy/Vote";
+import { Subcommand } from "../util/subcommand";
 
 class CommandVoteCreate implements Subcommand
 {
