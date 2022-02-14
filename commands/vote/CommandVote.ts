@@ -1,16 +1,20 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import Command from "../../util/command";
 import CommandVoteBegin from "./CommandVoteBegin";
 import CommandVoteCreate from "./CommandVoteCreate";
 import CommandVoteDiscard from "./CommandVoteDiscard";
 
-export default class CommandVote extends Command
+class CommandVote implements Command
 {
-    constructor()
-    {
-        super("vote", "Créer ou commencer un vote")
-        this.addSubcommand(new CommandVoteCreate());
-        this.addSubcommand(new CommandVoteBegin());
-        this.addSubcommand(new CommandVoteDiscard());
-        this.register();
-    }
+    data = new SlashCommandBuilder()
+        .setName("vote")
+        .setDescription("Créer ou commencer un vote")
+
+    subcommands = [
+        CommandVoteCreate,
+        CommandVoteBegin,
+        CommandVoteDiscard,
+    ]
 }
+
+export default new CommandVote()

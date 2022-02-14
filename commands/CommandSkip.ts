@@ -1,26 +1,25 @@
-import { Client, CommandInteraction, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction, MessageEmbed } from "discord.js";
+import Bot from "../bot";
 import MusicPlayer from "../music/musicplayer";
 import Command from "../util/command";
 
-class CommandSkip extends Command
+class CommandSkip implements Command
 {
-    constructor() 
-    {
-        super("skip", "Skip la musique actuelle");
-        this.register();
-    }
+    data = new SlashCommandBuilder()
+        .setName("skip")
+        .setDescription("Skip la musique actuelle");
 
-    run(client: Client, interaction: CommandInteraction)
+    run(interaction: CommandInteraction)
     {
-        super.run(client, interaction);
         MusicPlayer.playNext(interaction.guild);
         const embed = new MessageEmbed()
             .setColor("#00bfff")
             .setTitle(":fast_forward: Skip !")
             .setDescription("Musique skippée !")
-            .setFooter(client.user.username, client.user.avatarURL());
+            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         interaction.reply({embeds:[embed]});
     }
 }
 
-export default CommandSkip;
+export default new CommandSkip();

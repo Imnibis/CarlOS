@@ -1,20 +1,17 @@
-import { Client, CommandInteraction, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction, } from "discord.js";
 import MusicQueue from "../music/musicqueue";
-import ArgType from "../util/argtype";
 import Command from "../util/command";
 import ListMessage, { ElementList } from "../util/listmessage";
 
-class CommandQueue extends Command
+class CommandQueue implements Command
 {
-    constructor() 
-    {
-        super("queue", "Afficher les musiques dans la file d'attente");
-        this.register();
-    }
+    data = new SlashCommandBuilder()
+        .setName("queue")
+        .setDescription("Afficher les musiques dans la file d'attente");
 
-    run(client: Client, interaction: CommandInteraction)
+    run(interaction: CommandInteraction)
     {
-        super.run(client, interaction);
         new ListMessage("File d'attente", "La file d'attente est vide.")
             .setUpdateFunction((from, nb) => {
                 let elementList: ElementList = []
@@ -31,4 +28,4 @@ class CommandQueue extends Command
     }
 }
 
-export default CommandQueue;
+export default new CommandQueue();

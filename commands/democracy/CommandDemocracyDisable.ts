@@ -1,15 +1,16 @@
-import { Client, CommandInteraction, MessageEmbed } from "discord.js";
+import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
+import { CommandInteraction, MessageEmbed } from "discord.js";
+import Bot from "../../bot";
 import Guild from "../../models/guild.model";
-import Command from "../../util/command";
+import { Subcommand } from "../../util/subcommand";
 
-export default class CommandDemocracyDisable extends Command
+class CommandDemocracyDisable implements Subcommand
 {
-    constructor()
-    {
-        super("disable", "Désactiver la démocratie sur ce serveur", true);
-    }
+    data = new SlashCommandSubcommandBuilder()
+        .setName("disable")
+        .setDescription("Désactiver la démocratie sur ce serveur")
 
-    async run(client: Client, interaction: CommandInteraction): Promise<void>
+    async run(interaction: CommandInteraction): Promise<void>
     {
         const guild = await Guild.findOne({where: {id: interaction.guildId}})
         await guild.setSetting('democracy', false);
@@ -17,7 +18,9 @@ export default class CommandDemocracyDisable extends Command
             .setColor("#00bfff")
             .setTitle("Succès")
             .setDescription("Démocratie désactivée!")
-            .setFooter(client.user.username, client.user.avatarURL());
+            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         interaction.reply({embeds: [embed]})
     }
 }
+
+export default new CommandDemocracyDisable()

@@ -1,20 +1,18 @@
-import { Client, CommandInteraction, MessageEmbed } from "discord.js";
-import MusicPlayer from "../music/musicplayer";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction, MessageEmbed } from "discord.js";
+import Bot from "../bot";
 import MusicQueue from "../music/musicqueue";
 import Command from "../util/command";
 import ListMessage, { ElementList } from "../util/listmessage";
 
-class CommandRemove extends Command
+class CommandRemove implements Command
 {
-    constructor() 
-    {
-        super("remove", "Retirer une musique de la file d'attente");
-        this.register();
-    }
+    data = new SlashCommandBuilder()
+        .setName("remove")
+        .setDescription("Retirer une musique de la file d'attente");
 
-    run(client: Client, interaction: CommandInteraction)
+    run(interaction: CommandInteraction)
     {
-        super.run(client, interaction);
         new ListMessage(":put_litter_in_its_place: Retirer une musique", "La file d'attente est vide.", 0, true)
             .setUpdateFunction((from, nb) => {
                 let elementList: ElementList = []
@@ -34,11 +32,11 @@ class CommandRemove extends Command
                     .setColor("#00bfff")
                     .setTitle(":put_litter_in_its_place: Retirer une musique")
                     .setDescription("Musique retirée.")
-                    .setFooter(client.user.username, client.user.avatarURL());
+                    .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
                 interaction.followUp({embeds:[embed]});
             })
             .send(interaction);
     }
 }
 
-export default CommandRemove;
+export default new CommandRemove();

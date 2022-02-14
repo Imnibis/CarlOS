@@ -1,10 +1,8 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import { ApplicationCommandPermissionData, Client, GuildApplicationCommandPermissionData } from "discord.js";
-import { pipeline } from "stream";
+import { ApplicationCommandPermissionData, Client, Collection, GuildApplicationCommandPermissionData } from "discord.js";
 import CommandChannel from "../commands/channel/CommandChannel";
 import CommandPause from "../commands/CommandPause";
-import CommandPing from "../commands/CommandPing";
 import CommandPlay from "../commands/CommandPlay";
 import CommandQueue from "../commands/CommandQueue";
 import CommandRemove from "../commands/CommandRemove";
@@ -14,34 +12,18 @@ import CommandSkip from "../commands/CommandSkip";
 import CommandDemocracy from "../commands/democracy/CommandDemocracy";
 import CommandVote from "../commands/vote/CommandVote";
 import Command from "./command";
+import * as fs from "fs";
+import { SlashCommandBuilder } from "@discordjs/builders";
 
 class CommandManager
 {
-    static commands: Command[] = []
     static client: Client;
+    static commands: Command[];
 
     static init(client: Client)
     {
         this.client = client;
-
-        //const ping = new CommandPing();
-        const play = new CommandPlay();
-        const queue = new CommandQueue();
-        const search = new CommandSearch();
-        const skip = new CommandSkip();
-        const remove = new CommandRemove();
-        const pause = new CommandPause();
-        const resume = new CommandResume();
-        const democracy = new CommandDemocracy();
-        const vote = new CommandVote();
-        const channel = new CommandChannel();
-
         this.putCommands();
-    }
-    
-    static registerCommand(command: Command) : void
-    {
-        this.commands.push(command);
     }
 
     static putCommands() : void
@@ -50,13 +32,20 @@ class CommandManager
             throw new Error("A client needs to be assigned before you can register a command.");
         }
         console.log("Sending commands to Discord...");
-        let apiCommands = [];
-        this.commands.forEach(command => {
-            if (command.apiObject.userPermissions !== undefined &&
-                command.apiObject.userPermissions !== null)
-                command.apiObject.default_permission = false;
-            apiCommands.push(command.apiObject);
-        });
+        let commands = [];
+        const commandFiles = fs.readdirSync('../commands').filter(file => file.endsWith('.ts'));
+
+        for (const file of commandFiles) {
+            const command: Command = require(`../commands/${file}`);
+            if (command.subcommands !== undefined &&
+                command.subcommands !== null) {
+                command.subcommands.forEach(subcommand => {
+                    (command.data as SlashCommandBuilder).addSubcommand(subcommand.data)
+                })
+            }
+            commands.push(command.data.toJSON());
+            this.commands.push(command);
+        }
         
         const rest = new REST({version: '9'}).setToken(this.client.token);
         this.client.guilds.cache.forEach((guild) => {
@@ -64,20 +53,20 @@ class CommandManager
                 try {
                     const appID = this.client.application.id;
                     const guildID = guild.id;
-                    await rest.put(Routes.applicationGuildCommands(appID, guildID), {body: apiCommands},);
+                    await rest.put(Routes.applicationGuildCommands(appID, guildID), {body: commands},);
                     const guildRoles = await guild.roles.fetch();
                     const getRoles = (commandName) => {
-                        const permissions = apiCommands.find(
+                        const permissions = commands.find(
                             (x) => x.name === commandName
-                        ).userPermissions;
+                        ).permissions;
             
                         if (!permissions) return null;
                         return guildRoles.filter(
                             (x) => x.permissions.has(permissions) && !x.managed
                         );
                     };
-                    const commands = await guild.commands.fetch();
-                    const fullPermissions = commands.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
+                    const guildCommands = await guild.commands.fetch();
+                    const fullPermissions = guildCommands.reduce<GuildApplicationCommandPermissionData[]>((accumulator, x) => {
                         const roles = getRoles(x.name);
                         if (!roles) return accumulator;
                         const permissions = roles.reduce<ApplicationCommandPermissionData[]>((a, v) => {
@@ -115,8 +104,17 @@ class CommandManager
             const commandName = interaction.commandName;
             
             this.commands.forEach(command => {
-                if (command.apiObject.name === commandName)
-                    command.exec(this.client, interaction);
+                if (command.data.name === commandName) {
+                    const subcommandName = interaction.options.getSubcommand(false);
+                    if (command.subcommands !== undefined &&
+                        command.subcommands !== null &&
+                        subcommandName !== null) {
+                        command.subcommands.forEach(subcommand => {
+                            if (subcommand.data.name === subcommandName)
+                                subcommand.run(interaction);
+                        })
+                    } else command.run(interaction);
+                }
             })
         });
     }

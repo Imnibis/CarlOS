@@ -1,24 +1,26 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { Client, CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import Bot from "../bot";
 import MusicPlayer from "../music/musicplayer";
 import MusicQueue from "../music/musicqueue";
 import YoutubeVideo from "../music/youtubeVideo";
-import ArgType from "../util/argtype";
 import Command from "../util/command";
 import ListMessage, { ElementList } from "../util/listmessage";
 
-class CommandSearch extends Command
+class CommandSearch implements Command
 {
-    constructor() 
-    {
-        super("search", "Chercher une musique sur YouTube");
-        this.addArgument("keywords", "Mots clés de la recherche", ArgType.STRING, true);
-        this.register();
-    }
+    data = new SlashCommandBuilder()
+        .setName("search")
+        .setDescription("Chercher une musique sur YouTube")
+        .addStringOption(option => (
+            option.setName("keywords")
+                .setDescription("Mots clés de la recherche")
+                .setRequired(true)
+        ));
 
-    run(client: Client, interaction: CommandInteraction)
+    run(interaction: CommandInteraction)
     {
-        super.run(client, interaction);
-        if (!MusicPlayer.checkVoiceChannel(client, interaction))
+        if (!MusicPlayer.checkVoiceChannel(Bot.client, interaction))
             return;
         YoutubeVideo.search(interaction.options.getString("keywords", true)).then(videos => {
             new ListMessage("Résultats de recherche", "Aucun résultat.", 1, true)
@@ -42,7 +44,7 @@ class CommandSearch extends Command
                     else {
                         MusicQueue.append(video, interaction.member as GuildMember);
                         this.delete();
-                        interaction.followUp({embeds:[video.embed(client)]});
+                        interaction.followUp({embeds:[video.embed(Bot.client)]});
                     }
                 })
                 .send(interaction);
@@ -61,4 +63,4 @@ class CommandSearch extends Command
     }
 }
 
-export default CommandSearch;
+export default new CommandSearch();

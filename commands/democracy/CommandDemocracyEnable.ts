@@ -1,15 +1,16 @@
+import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
 import { Client, CommandInteraction, Message, MessageActionRow, MessageEmbed, MessageSelectMenu, SelectMenuInteraction, TextChannel } from "discord.js";
+import Bot from "../../bot";
 import Guild from "../../models/guild.model";
-import Command from "../../util/command";
+import { Subcommand } from "../../util/subcommand";
 
-export default class CommandDemocracyEnable extends Command
+class CommandDemocracyEnable implements Subcommand
 {
-    constructor()
-    {
-        super("enable", "Activer la démocratie sur ce serveur", true);
-    }
+    data = new SlashCommandSubcommandBuilder()
+        .setName("enable")
+        .setDescription("Activer la démocratie sur ce serveur");
 
-    async run(client: Client, interaction: CommandInteraction): Promise<void>
+    async run(interaction: CommandInteraction): Promise<void>
     {
         const guild = await Guild.findOne({where: {id: interaction.guildId}})
         await guild.setSetting('democracy', true);
@@ -17,7 +18,7 @@ export default class CommandDemocracyEnable extends Command
             .setColor("#00bfff")
             .setTitle("Succès")
             .setDescription("Démocratie activée!")
-            .setFooter(client.user.username, client.user.avatarURL());
+            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         const row = new MessageActionRow().addComponents(
             new MessageSelectMenu()
                 .setCustomId('selectChannel')
@@ -39,7 +40,7 @@ export default class CommandDemocracyEnable extends Command
                     .setColor("#ff0000")
                     .setTitle("Erreur")
                     .setDescription("Seul l'utilisateur ayant activé la démocratie peut choisir le channel.")
-                    .setFooter(client.user.username, client.user.avatarURL());
+                    .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
                 inter.reply({embeds:[embed], ephemeral: true});
                 return;
             }
@@ -48,16 +49,18 @@ export default class CommandDemocracyEnable extends Command
                 .setColor("#00bfff")
                 .setTitle("Succès")
                 .setDescription("Channel défini !")
-                .setFooter(client.user.username, client.user.avatarURL());
+                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
             inter.reply({embeds: [embed], ephemeral: true});
             inter.guild.channels.fetch(inter.values[0]).then((channel: TextChannel) => {
                 const embed = new MessageEmbed()
                     .setColor("#00bfff")
                     .setTitle("Information")
                     .setDescription("Ce channel a été défini comme channel de vote démocratique.")
-                    .setFooter(client.user.username, client.user.avatarURL());
+                    .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
                 channel.send({embeds: [embed]});
             })
         });
     }
 }
+
+export default new CommandDemocracyEnable();

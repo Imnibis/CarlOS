@@ -1,21 +1,29 @@
+import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
 import { ChannelType } from "discord-api-types";
 import { CategoryChannel, Client, CommandInteraction, GuildChannel, GuildMember, MessageEmbed } from "discord.js";
+import Bot from "../../bot";
 import Vote from "../../democracy/Vote";
 import ArgType from "../../util/argtype";
-import Command from "../../util/command";
+import { Subcommand } from "../../util/subcommand";
 
-class CommandChannelAdd extends Command
+class CommandChannelAdd implements Subcommand
 {
-    constructor() 
-    {
-        super("add", "Créer un channel", true);
-        this.addArgument("nom", "Nom du channel", ArgType.STRING, true);
-        this.addArgument("catégorie", "Catégorie où placer le channel", ArgType.CHANNEL, true);
-    }
+    data = new SlashCommandSubcommandBuilder()
+        .setName("add")
+        .setDescription("Créer un channel")
+        .addStringOption(option => (
+            option.setName("nom")
+                .setDescription("Nom du channel")
+                .setRequired(true)
+        ))
+        .addChannelOption(option => (
+            option.setName("catégorie")
+                .setDescription("Catégorie où placer le channel")
+                .setRequired(true)
+        ))
 
-    run(client: Client, interaction: CommandInteraction)
+    run(interaction: CommandInteraction)
     {
-        super.run(client, interaction);
         const name = interaction.options.getString("nom");
         const category = interaction.options.getChannel("catégorie", true);
         const guild = interaction.guild;
@@ -24,7 +32,7 @@ class CommandChannelAdd extends Command
                 .setColor("#ff0000")
                 .setTitle("Erreur")
                 .setDescription("Ce channel n'est pas une catégorie.")
-                .setFooter(client.user.username, client.user.avatarURL());
+                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
             interaction.reply({embeds:[embed], ephemeral: true});
         } else {
             Vote.addAction({
@@ -39,4 +47,4 @@ class CommandChannelAdd extends Command
     }
 }
 
-export default CommandChannelAdd;
+export default new CommandChannelAdd();
