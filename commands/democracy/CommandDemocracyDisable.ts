@@ -1,8 +1,8 @@
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import Bot from "../bot";
-import Guild from "../models/guild.model";
-import { Subcommand } from "../util/subcommand";
+import Bot from "../../bot";
+import Guild from "../../models/guild.model";
+import { Subcommand } from "../../util/subcommand";
 
 class CommandDemocracyDisable implements Subcommand
 {

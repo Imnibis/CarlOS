@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import Command from "../util/command";
-import CommandDemocracyDisable from "./CommandDemocracyDisable";
-import CommandDemocracyEnable from "./CommandDemocracyEnable";
+import CommandDemocracyDisable from "./democracy/CommandDemocracyDisable";
+import CommandDemocracyEnable from "./democracy/CommandDemocracyEnable";
 
 class CommandDemocracy implements Command
 {

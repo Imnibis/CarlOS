@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import Command from "../util/command";
-import CommandVoteBegin from "./CommandVoteBegin";
-import CommandVoteCreate from "./CommandVoteCreate";
-import CommandVoteDiscard from "./CommandVoteDiscard";
+import CommandVoteBegin from "./vote/CommandVoteBegin";
+import CommandVoteCreate from "./vote/CommandVoteCreate";
+import CommandVoteDiscard from "./vote/CommandVoteDiscard";
 
 class CommandVote implements Command
 {
