@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import { ApplicationCommandPermissionData, Client, GuildApplicationCommandPermissionData } from "discord.js";
+import { ApplicationCommandPermissionData, Client, GuildApplicationCommandPermissionData, PermissionResolvable } from "discord.js";
 import Command from "./command";
 import * as fs from "fs";
 import { SlashCommandBuilder } from "@discordjs/builders";
@@ -48,13 +48,13 @@ class CommandManager
                     await rest.put(Routes.applicationGuildCommands(appID, guildID), {body: commands},);
                     const guildRoles = await guild.roles.fetch();
                     const getRoles = (commandName) => {
-                        const permissions = commands.find(
+                        const permissions = this.commands.find(
                             (x) => x.data.name === commandName
                         ).permissions;
             
                         if (!permissions) return null;
                         return guildRoles.filter(
-                            (x) => x.permissions.has(permissions) && !x.managed
+                            (x) => x.permissions.has(permissions as PermissionResolvable[]) && !x.managed
                         );
                     };
                     const guildCommands = await guild.commands.fetch();
