@@ -7,7 +7,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import Bot from "../bot";
 
 class CommandPlay implements Command {
-    data= new SlashCommandBuilder()
+    data = new SlashCommandBuilder()
         .setName("play")
         .setDescription("Jouer une musique dans le channel actuel")
         .addStringOption(option => (

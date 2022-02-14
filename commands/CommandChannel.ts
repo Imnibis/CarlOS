@@ -13,4 +13,4 @@ class CommandChannel implements Command
     ]
 }
 
-export default CommandChannel;
+export default new CommandChannel();
