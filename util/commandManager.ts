@@ -33,7 +33,7 @@ class CommandManager
         }
         console.log("Sending commands to Discord...");
         let commands = [];
-        const commandFiles = fs.readdirSync('../commands').filter(file => file.endsWith('.ts'));
+        const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.ts'));
 
         for (const file of commandFiles) {
             const command: Command = require(`../commands/${file}`);
