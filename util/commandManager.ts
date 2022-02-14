@@ -26,6 +26,8 @@ class CommandManager
 
         for (const file of commandFiles) {
             const command: Command = require(`../commands/${file}`);
+
+            console.log(JSON.stringify(command))
             if (command.subcommands !== undefined &&
                 command.subcommands !== null) {
                 command.subcommands.forEach(subcommand => {
