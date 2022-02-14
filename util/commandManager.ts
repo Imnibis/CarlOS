@@ -8,7 +8,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 class CommandManager
 {
     static client: Client;
-    static commands: Command[];
+    static commands: Command[] = [];
 
     static init(client: Client)
     {
