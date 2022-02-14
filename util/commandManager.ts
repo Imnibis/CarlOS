@@ -25,9 +25,8 @@ class CommandManager
         const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.ts'));
 
         for (const file of commandFiles) {
-            const command: Command = require(`../commands/${file}`);
+            const command: Command = require(`../commands/${file}`).default;
 
-            console.log(JSON.stringify(command))
             if (command.subcommands !== undefined &&
                 command.subcommands !== null) {
                 command.subcommands.forEach(subcommand => {
