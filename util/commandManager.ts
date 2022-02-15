@@ -41,7 +41,7 @@ class CommandManager
         }
         
         console.log("Sending commands to Discord...");
-        const rest = new REST({version: '9'}).setToken(this.client.token);
+        const rest = new REST({version: '10'}).setToken(this.client.token);
         this.client.guilds.cache.forEach((guild) => {
             (async () => {
                 try {

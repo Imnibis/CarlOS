@@ -1,6 +1,5 @@
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
-import { Client, CommandInteraction, ComponentType, Message, ActionRow, SelectMenuComponent, SelectMenuInteraction, TextChannel, SelectMenuOption } from "discord.js";
-import Bot from "../../bot";
+import { CommandInteraction, ComponentType, Message, ActionRow, SelectMenuComponent, SelectMenuInteraction, TextChannel, SelectMenuOption } from "discord.js";
 import Guild from "../../models/guild.model";
 import CarlOSEmbed from "../../util/carlosEmbed";
 import { Subcommand } from "../../util/subcommand";
