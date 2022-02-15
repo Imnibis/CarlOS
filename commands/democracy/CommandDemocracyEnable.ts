@@ -24,7 +24,7 @@ class CommandDemocracyEnable implements Subcommand
             new SelectMenuComponent()
                 .setCustomId('selectChannel')
                 .setPlaceholder('Sélectionnez le channel de vote')
-                .setOptions(options)
+                .setOptions([])
         )
         interaction.reply({embeds: [embed], components: [row]});
         const msg = await interaction.fetchReply() as Message;
