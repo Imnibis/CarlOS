@@ -3,7 +3,7 @@ import { Routes } from "discord-api-types/v9";
 import { ApplicationCommandPermissionData, Client, GuildApplicationCommandPermissionData, PermissionResolvable } from "discord.js";
 import Command from "./command";
 import * as fs from "fs";
-import { SlashCommandBuilder } from "@discordjs/builders";
+import { ContextMenuCommandBuilder, SlashCommandBuilder } from "@discordjs/builders";
 
 class CommandManager
 {
@@ -33,7 +33,9 @@ class CommandManager
                     console.log(`Registering command /${command.data?.name} ${subcommand.data.name}`);
                     (command.data as SlashCommandBuilder).addSubcommand(subcommand.data);
                 })
-            } else console.log(`Registering command /${command.data?.name}`);
+            } else console.log(`Registering ${
+                command.data instanceof ContextMenuCommandBuilder ? "context menu " : "command /"
+            }${command.data?.name}`);
             commands.push(command.data.toJSON());
             this.commands.push(command);
         }
@@ -91,7 +93,7 @@ class CommandManager
     static handleInteractionEvent() : void
     {
         this.client.on("interactionCreate", interaction => {
-            if (!interaction.isCommand())
+            if (!interaction.isCommand() && !interaction.isContextMenu())
                 return;
             const commandName = interaction.commandName;
             
