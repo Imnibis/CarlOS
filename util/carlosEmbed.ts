@@ -5,9 +5,7 @@ export default class CarlOSEmbed extends Embed
 {
     constructor(color: number) {
         super()
-        this
-            .setColor(color)
-            .setTitle(this.title)
+        this.setColor(color)
             .setFooter({text: Bot.client.user.username, iconURL: Bot.client.user.avatarURL()});
     }
 
