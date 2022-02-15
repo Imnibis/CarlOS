@@ -25,9 +25,7 @@ class CommandDemocracyEnable implements Subcommand
                     .setValue(channel.id)
             );
         });
-        const row = new ActionRow().addComponents(
-            
-        )
+        const row = new ActionRow().addComponents(selectMenu)
         interaction.reply({embeds: [embed], components: [row]});
         const msg = await interaction.fetchReply() as Message;
         const collector = msg.createMessageComponentCollector({componentType: ComponentType.SelectMenu});
