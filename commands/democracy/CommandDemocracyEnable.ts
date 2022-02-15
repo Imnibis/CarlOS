@@ -15,16 +15,18 @@ class CommandDemocracyEnable implements Subcommand
         const guild = await Guild.findOne({where: {id: interaction.guildId}})
         await guild.setSetting('democracy', true);
         const embed = CarlOSEmbed.successEmbed("Démocratie activée!")
-        const options = interaction.guild.channels.cache.filter(channel => channel.isText()).map(channel => (
-            new SelectMenuOption()
-            .setLabel(`#${channel.name}`)
-            .setValue(channel.id)
-        ));
+        const selectMenu = new SelectMenuComponent()
+            .setCustomId('selectChannel')
+            .setPlaceholder('Sélectionnez le channel de vote');
+        interaction.guild.channels.cache.filter(channel => channel.isTextBased()).forEach(channel => {
+            selectMenu.addOptions(
+                new SelectMenuOption()
+                    .setLabel(`#${channel.name}`)
+                    .setValue(channel.id)
+            );
+        });
         const row = new ActionRow().addComponents(
-            new SelectMenuComponent()
-                .setCustomId('selectChannel')
-                .setPlaceholder('Sélectionnez le channel de vote')
-                .setOptions([])
+            
         )
         interaction.reply({embeds: [embed], components: [row]});
         const msg = await interaction.fetchReply() as Message;
