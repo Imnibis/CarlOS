@@ -1,7 +1,8 @@
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
-import { ButtonInteraction, Client, CommandInteraction, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { ButtonInteraction, GuildMember, Message, ActionRow, ButtonComponent, ChatInputCommandInteraction, ButtonStyle, ComponentType } from "discord.js";
 import Bot from "../../bot";
 import Vote from "../../democracy/Vote";
+import CarlOSEmbed from "../../util/carlosEmbed";
 import { Subcommand } from "../../util/subcommand";
 
 class CommandVoteCreate implements Subcommand
@@ -20,7 +21,7 @@ class CommandVoteCreate implements Subcommand
                 .setRequired(false)
         ))
 
-    async run(interaction: CommandInteraction): Promise<void>
+    async run(interaction: ChatInputCommandInteraction): Promise<void>
     {
         if (!await Vote.checkGuild(interaction.guild, interaction.reply.bind(interaction)))
             return;
@@ -31,56 +32,40 @@ class CommandVoteCreate implements Subcommand
         );
 
         if (res) {
-            const embed = new MessageEmbed()
-                .setColor("#00bfff")
+            const embed = CarlOSEmbed.infoEmbed()
                 .setTitle("Vote créé !")
                 .setDescription("Votre vote a été créé. Vous pouvez maintenant exécuter toutes les actions nécessaires puis commencer le vote en exécutant /vote begin ou en cliquant sur le bouton ci dessous.")
-                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
-            const row = new MessageActionRow()
+            const row = new ActionRow()
                 .addComponents(
-                    new MessageButton()
+                    new ButtonComponent()
                         .setCustomId('beginVote')
-                        .setEmoji('✅')
+                        .setEmoji({name: ':white_check_mark:'})
                         .setLabel('Commencer le vote')
-                        .setStyle('PRIMARY')
+                        .setStyle(ButtonStyle.Primary)
                 )
             await interaction.reply({embeds: [embed], components: [row]});
             const msg = await interaction.fetchReply() as Message;
-            const collector = msg.createMessageComponentCollector({componentType:'BUTTON'});
+            const collector = msg.createMessageComponentCollector({componentType: ComponentType.Button});
             
             collector.on('collect', async (inter: ButtonInteraction) => {
                 if (interaction.user.id !== inter.user.id) {
-                    const embed = new MessageEmbed()
-                        .setColor("#ff0000")
-                        .setTitle("Erreur")
-                        .setDescription("Seul la personne ayant créé le vote peut le commencer.")
-                        .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+                    const embed = CarlOSEmbed.errorEmbed("Seul la personne ayant créé le vote peut le commencer.")
                     await inter.reply({embeds: [embed]})
                     return;
                 }
                 const res = await Vote.begin(interaction.member as GuildMember);
                 if (res) {
-                    const embed = new MessageEmbed()
-                        .setColor("#00bfff")
+                    const embed = CarlOSEmbed.infoEmbed()
                         .setTitle("Vote commencé !")
                         .setDescription("Le vote a commencé dans le channel de vote !")
-                        .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
                     await inter.reply({embeds: [embed]})
                 } else {
-                    const embed = new MessageEmbed()
-                        .setColor("#ff0000")
-                        .setTitle("Erreur")
-                        .setDescription("Il n'y a aucun vote à commencer.")
-                        .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+                    const embed = CarlOSEmbed.errorEmbed("Il n'y a aucun vote à commencer.")
                     await inter.reply({embeds: [embed]})
                 }
             });
         } else {
-            const embed = new MessageEmbed()
-                .setColor("#ff0000")
-                .setTitle("Erreur")
-                .setDescription("Vous avez déjà un vote en cours de création.")
-                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+            const embed = CarlOSEmbed.errorEmbed("Vous avez déjà un vote en cours de création.")
             await interaction.reply({embeds: [embed]})
         }
     }

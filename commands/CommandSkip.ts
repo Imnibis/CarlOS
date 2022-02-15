@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import Bot from "../bot";
 import MusicPlayer from "../music/musicplayer";
+import CarlOSEmbed from "../util/carlosEmbed";
 import Command from "../util/command";
 
 class CommandSkip implements Command
@@ -13,11 +14,9 @@ class CommandSkip implements Command
     run(interaction: CommandInteraction)
     {
         MusicPlayer.playNext(interaction.guild);
-        const embed = new MessageEmbed()
-            .setColor("#00bfff")
+        const embed = CarlOSEmbed.infoEmbed()
             .setTitle(":fast_forward: Skip !")
             .setDescription("Musique skippée !")
-            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         interaction.reply({embeds:[embed]});
     }
 }

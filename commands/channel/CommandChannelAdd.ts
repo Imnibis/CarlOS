@@ -1,8 +1,7 @@
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
-import { ChannelType } from "discord-api-types";
-import { CategoryChannel, Client, CommandInteraction, GuildChannel, GuildMember, MessageEmbed } from "discord.js";
-import Bot from "../../bot";
+import { CategoryChannel, GuildMember, ChatInputCommandInteraction, ChannelType } from "discord.js";
 import Vote from "../../democracy/Vote";
+import CarlOSEmbed from "../../util/carlosEmbed";
 import { Subcommand } from "../../util/subcommand";
 
 class CommandChannelAdd implements Subcommand
@@ -21,17 +20,13 @@ class CommandChannelAdd implements Subcommand
                 .setRequired(true)
         ))
 
-    run(interaction: CommandInteraction)
+    run(interaction: ChatInputCommandInteraction)
     {
         const name = interaction.options.getString("nom");
         const category = interaction.options.getChannel("catégorie", true);
         const guild = interaction.guild;
-        if (category.type !== "GUILD_CATEGORY") {
-            const embed = new MessageEmbed()
-                .setColor("#ff0000")
-                .setTitle("Erreur")
-                .setDescription("Ce channel n'est pas une catégorie.")
-                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+        if (category.type !== ChannelType.GuildCategory) {
+            const embed = CarlOSEmbed.errorEmbed("Ce channel n'est pas une catégorie.")
             interaction.reply({embeds:[embed], ephemeral: true});
         } else {
             Vote.addAction({

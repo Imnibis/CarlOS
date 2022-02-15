@@ -1,5 +1,3 @@
-import { Client, Guild, Intents } from "discord.js"
-import CommandManager from "./util/commandManager"
 import Bot from "./bot";
 import MusicPlayer from "./music/musicplayer"
 import Setting from "./models/setting.model";

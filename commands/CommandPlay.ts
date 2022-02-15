@@ -1,10 +1,11 @@
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction, GuildMember } from "discord.js";
 import Command from "../util/command";
 import YoutubeVideo from "../music/youtubeVideo";
 import MusicQueue from "../music/musicqueue";
 import MusicPlayer from "../music/musicplayer";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import Bot from "../bot";
+import CarlOSEmbed from "../util/carlosEmbed";
 
 class CommandPlay implements Command {
     data = new SlashCommandBuilder()
@@ -16,7 +17,7 @@ class CommandPlay implements Command {
                 .setRequired(true)
         ));
 
-    run(interaction: CommandInteraction)
+    run(interaction: ChatInputCommandInteraction)
     {
         const input_string = interaction.options.getString("musique", true);
         const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
@@ -45,11 +46,7 @@ class CommandPlay implements Command {
 
     sendDoesntExistMessage(interaction: CommandInteraction)
     {
-        const embed = new MessageEmbed()
-            .setColor("#ff0000")
-            .setTitle("Erreur")
-            .setDescription("Vidéo introuvable")
-            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+        const embed = CarlOSEmbed.errorEmbed("Vidéo introuvable")
         interaction.reply({embeds:[embed]});
     }
 }

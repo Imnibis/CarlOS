@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import { ApplicationCommandPermissionData, Client, GuildApplicationCommandPermissionData, PermissionResolvable } from "discord.js";
+import { ApplicationCommandPermissionData, ApplicationCommandPermissionType, Client, GuildApplicationCommandPermissionData, PermissionResolvable } from "discord.js";
 import Command from "./command";
 import * as fs from "fs";
 import { ContextMenuCommandBuilder, SlashCommandBuilder } from "@discordjs/builders";
@@ -56,7 +56,7 @@ class CommandManager
             
                         if (!permissions) return null;
                         return guildRoles.filter(
-                            (x) => x.permissions.has(permissions as PermissionResolvable[]) && !x.managed
+                            (x) => x.permissions.has(permissions) && !x.managed
                         );
                     };
                     const guildCommands = await guild.commands.fetch();
@@ -68,7 +68,7 @@ class CommandManager
                                 ...a,
                                 {
                                     id: v.id,
-                                    type: "ROLE",
+                                    type: ApplicationCommandPermissionType.Role,
                                     permission: true,
                                 },
                             ]
@@ -93,12 +93,16 @@ class CommandManager
     static handleInteractionEvent() : void
     {
         this.client.on("interactionCreate", interaction => {
-            if (!interaction.isCommand() && !interaction.isContextMenu())
+            if (!interaction.isCommand())
                 return;
             const commandName = interaction.commandName;
             
             this.commands.forEach(command => {
                 if (command.data.name === commandName) {
+                    if (!interaction.isChatInputCommand()) {
+                        command.run(interaction);
+                        return;
+                    }
                     const subcommandName = interaction.options.getSubcommand(false);
                     if (command.subcommands !== undefined &&
                         command.subcommands !== null &&

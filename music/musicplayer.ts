@@ -1,5 +1,6 @@
 import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, createAudioResource, demuxProbe, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
-import { Client, CommandInteraction, Guild, GuildMember, MessageEmbed, VoiceChannel } from "discord.js";
+import { Client, CommandInteraction, Guild, GuildMember, Embed, VoiceChannel } from "discord.js";
+import CarlOSEmbed from "../util/carlosEmbed";
 import Music from "./music";
 import MusicQueue from "./musicqueue";
 
@@ -26,31 +27,19 @@ class MusicPlayer
     
     static sendNotConnectedMessage(client: Client, interaction: CommandInteraction)
     {
-        const embed = new MessageEmbed()
-            .setColor("#ff0000")
-            .setTitle("Erreur")
-            .setDescription("Vous devez être connecté à un channel vocal sur ce serveur")
-            .setFooter(client.user.username, client.user.avatarURL());
+        const embed = CarlOSEmbed.errorEmbed("Vous devez être connecté à un channel vocal sur ce serveur")
         interaction.reply({embeds:[embed]});
     }
 
     static sendSameChannelMessage(client: Client, interaction: CommandInteraction)
     {
-        const embed = new MessageEmbed()
-            .setColor("#ff0000")
-            .setTitle("Erreur")
-            .setDescription("Vous devez être connecté au même channel que le bot.")
-            .setFooter(client.user.username, client.user.avatarURL());
+        const embed = CarlOSEmbed.errorEmbed("Vous devez être connecté au même channel que le bot.")
         interaction.reply({embeds:[embed]});
     }
 
     static sendNoChannelMessage(client: Client, interaction: CommandInteraction)
     {
-        const embed = new MessageEmbed()
-            .setColor("#ff0000")
-            .setTitle("Erreur")
-            .setDescription("Vous devez être connecté au même channel que le bot.")
-            .setFooter(client.user.username, client.user.avatarURL());
+        const embed = CarlOSEmbed.errorEmbed("Vous devez être connecté au même channel que le bot.")
         interaction.reply({embeds:[embed]});
     }
 

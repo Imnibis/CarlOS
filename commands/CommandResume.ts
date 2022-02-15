@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import Bot from "../bot";
 import MusicPlayer from "../music/musicplayer";
+import CarlOSEmbed from "../util/carlosEmbed";
 import Command from "../util/command";
 
 class CommandResume implements Command
@@ -14,18 +15,12 @@ class CommandResume implements Command
     {
         if (MusicPlayer.isPaused(interaction.guild)) {
             MusicPlayer.resume(interaction.guild);
-            const embed = new MessageEmbed()
-                .setColor("#00bfff")
+            const embed = CarlOSEmbed.infoEmbed()
                 .setTitle(":arrow_forward: Play")
                 .setDescription("Musique reprise.")
-                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
             interaction.reply({embeds:[embed]});
         } else {
-            const embed = new MessageEmbed()
-                .setColor("#ff0000")
-                .setTitle("Erreur")
-                .setDescription("Aucune musique n'est en pause.")
-                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+            const embed = CarlOSEmbed.errorEmbed("Aucune musique n'est en pause.")
             interaction.reply({embeds:[embed]});
         }
     }

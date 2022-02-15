@@ -3,7 +3,7 @@ import * as youtubeSearch from "youtube-search-api";
 import * as YouTube from "ytube-api";
 import * as moment from "moment";
 const mdfSetup = require("moment-duration-format");
-import { Client, MessageEmbed } from "discord.js";
+import { Client, Colors, Embed } from "discord.js";
 import Setting from "../models/setting.model";
 
 mdfSetup(moment);
@@ -76,17 +76,17 @@ class YoutubeVideo
         moment.duration(this.duration).format("mm:ss");
     }
 
-    embed(client: Client) : MessageEmbed
+    embed(client: Client) : Embed
     {
-        const embed = new MessageEmbed()
-            .setColor("#ff0000")
+        const embed = new Embed()
+            .setColor(Colors.Red)
             .setTitle(this.title)
             .setURL(`https://www.youtube.com/watch?v=${this.id}`)
             .setDescription(this.formattedDuration())
-            .setAuthor(this.channelTitle, this.channelPicture,
-                `https://www.youtube.com/channel/${this.channelId}`)
+            .setAuthor({name: this.channelTitle, iconURL: this.channelPicture,
+                url: `https://www.youtube.com/channel/${this.channelId}`})
             .setThumbnail(this.thumbnail)
-            .setFooter(client.user.username, client.user.avatarURL());
+            .setFooter({text: client.user.username, iconURL: client.user.avatarURL()});
         return embed;
     }
 

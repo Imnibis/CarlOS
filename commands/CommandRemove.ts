@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import Bot from "../bot";
 import MusicQueue from "../music/musicqueue";
+import CarlOSEmbed from "../util/carlosEmbed";
 import Command from "../util/command";
 import ListMessage, { ElementList } from "../util/listmessage";
 
@@ -28,11 +29,9 @@ class CommandRemove implements Command
             .setInterractFunction(function(nb) {
                 MusicQueue.remove(interaction.guild, nb);
                 this.delete();
-                const embed = new MessageEmbed()
-                    .setColor("#00bfff")
+                const embed = CarlOSEmbed.infoEmbed()
                     .setTitle(":put_litter_in_its_place: Retirer une musique")
                     .setDescription("Musique retirée.")
-                    .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
                 interaction.followUp({embeds:[embed]});
             })
             .send(interaction);

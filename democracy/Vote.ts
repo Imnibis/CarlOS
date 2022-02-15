@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 import Bot from "../bot";
 import Guild from "../models/guild.model";
+import CarlOSEmbed from "../util/carlosEmbed";
 
 type Action = {name: string, description: string, severity: number, exec: () => void}
 type ReplyFunction = (options: string | Discord.InteractionReplyOptions | Discord.MessagePayload) => Promise<void>
@@ -30,11 +31,7 @@ export default class Vote
             if (!isDemocratic) error = "Ce serveur n'est pas démocratique.";
             else if (!hasVoteChannel) error = "Aucun channel de vote n'a été défini";
             if (error) {
-                const embed = new Discord.MessageEmbed()
-                    .setColor("#ff0000")
-                    .setTitle("Erreur")
-                    .setDescription(error)
-                    .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+                const embed = CarlOSEmbed.errorEmbed(error)
                 reply({embeds:[embed]});
                 resolve(false);
             } else resolve(true);
@@ -51,19 +48,13 @@ export default class Vote
         standalone = !!this.create(member, "Vote");
         const vote = this.guildVotes[guild.id][member.id].current
         vote.actions.push(action);
-        let embed = new Discord.MessageEmbed()
-            .setColor("#00bfff")
-            .setTitle("Succès")
-            .setDescription(`Action "${action.description}" ajoutée au vote "${vote.name}"`)
-            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
+        let embed = CarlOSEmbed.successEmbed(`Action "${action.description}" ajoutée au vote "${vote.name}"`)
         
         if (standalone) {
             await this.begin(member);
-            embed = new Discord.MessageEmbed()
-                .setColor("#00bfff")
+            embed = CarlOSEmbed.infoEmbed()
                 .setTitle("Vote commencé !")
                 .setDescription("Le vote a commencé dans le channel de vote !")
-                .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         }
         reply({embeds: [embed]});
     }
@@ -117,38 +108,36 @@ export default class Vote
         this.description = description ? description : null;
     }
 
-    getEmbed(): Discord.MessageEmbed
+    getEmbed(): CarlOSEmbed
     {
-        const embed = new Discord.MessageEmbed()
+        const embed = CarlOSEmbed.infoEmbed()
             .setTitle(this.name)
-            .setColor("#00bfff")
-            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
 
         if (this.description)
             embed.setDescription(this.description);
         this.actions.forEach(action => {
-            embed.addField(action.name, action.description);
+            embed.addField({name: action.name, value: action.description});
         })
-        embed.addField("Votes pour", this.yesVoters.length.toString(), true);
-        embed.addField("Votes contre", this.noVoters.length.toString(), true);
+        embed.addField({name: "Votes pour", value: this.yesVoters.length.toString(), inline: true});
+        embed.addField({name: "Votes contre", value: this.noVoters.length.toString(), inline: true});
         return embed;
     }
 
-    getButtons(): Discord.MessageActionRow
+    getButtons(): Discord.ActionRow
     {
-        const row = new Discord.MessageActionRow()
-            .addComponents([
-                new Discord.MessageButton()
+        const row = new Discord.ActionRow()
+            .addComponents(
+                new Discord.ButtonComponent()
                     .setCustomId('yesVote')
-                    .setEmoji('👍')
+                    .setEmoji({name: ':thumbsup:'})
                     .setLabel('Pour')
-                    .setStyle('SUCCESS'),
-                new Discord.MessageButton()
+                    .setStyle(Discord.ButtonStyle.Success),
+                new Discord.ButtonComponent()
                     .setCustomId('noVote')
-                    .setEmoji('👎')
+                    .setEmoji({name: ':thumbsdown:'})
                     .setLabel('Contre')
-                    .setStyle('DANGER')
-            ]);
+                    .setStyle(Discord.ButtonStyle.Danger)
+            );
 
         return row;
     }
@@ -160,7 +149,7 @@ export default class Vote
         const voteChannel = await this.guild.channels.fetch(voteChannelId) as Discord.TextChannel;
         
         const message = await voteChannel.send({embeds: [this.getEmbed()], components: [this.getButtons()]});
-        const collector = await message.createMessageComponentCollector({componentType: 'BUTTON'});
+        const collector = await message.createMessageComponentCollector({componentType: Discord.ComponentType.Button});
         collector.on('collect', (interaction: Discord.ButtonInteraction) => {
             if (interaction.customId === 'yesVote') {
                 const noVoteIndex = this.noVoters.findIndex(member => member.user.id === interaction.user.id)

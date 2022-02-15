@@ -1,4 +1,4 @@
-import { Client, Intents, Message } from "discord.js";
+import { Client, IntentsBitField, Message } from "discord.js";
 import Guild from "./models/guild.model";
 import MusicPlayer from "./music/musicplayer";
 import CommandManager from "./util/commandManager";
@@ -12,12 +12,12 @@ class Bot
     constructor(token)
     {
         Bot.client = new Client({intents: [
-            Intents.FLAGS.GUILDS,
-            Intents.FLAGS.GUILD_MEMBERS,
-            Intents.FLAGS.GUILD_BANS,
-            Intents.FLAGS.GUILD_VOICE_STATES,
-            Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-            Intents.FLAGS.GUILD_MESSAGES,
+            IntentsBitField.Flags.Guilds,
+            IntentsBitField.Flags.GuildMembers,
+            IntentsBitField.Flags.GuildBans,
+            IntentsBitField.Flags.GuildVoiceStates,
+            IntentsBitField.Flags.GuildMessageReactions,
+            IntentsBitField.Flags.GuildMessages,
         ]});
         Bot.client.on("ready", this.onReady.bind(this));
         

@@ -1,5 +1,6 @@
-import { CommandInteraction, Message, MessageEmbed, ReactionManager } from "discord.js";
+import { CommandInteraction, Message, Embed, Colors } from "discord.js";
 import Bot from "../bot";
+import CarlOSEmbed from "./carlosEmbed";
 
 type ElementList = [{title: string, description: string}?];
 type UpdateFunction = (from: number, nb: number) => ElementList;
@@ -51,16 +52,18 @@ class ListMessage
 
     update()
     {
-        if (this.message && !this.message.deleted)
-            this.message.edit({embeds:[this.getEmbed()]});
+        try {
+            if (this.message)
+                this.message.edit({embeds:[this.getEmbed()]});
+        } catch (e) {
+            console.error(e);
+        }
     }
 
-    getEmbed() : MessageEmbed
+    getEmbed() : Embed
     {
-        const embed = new MessageEmbed()
-            .setColor("#00bfff")
+        const embed = CarlOSEmbed.infoEmbed()
             .setTitle(this.title)
-            .setFooter(Bot.client.user.username, Bot.client.user.avatarURL());
         this.currentList = []
         this.pageNb++;
         while ((this.currentList.length === 0 || (this.maxPages !== 0 && this.pageNb >= this.maxPages))
@@ -72,7 +75,11 @@ class ListMessage
             return embed.setDescription(this.emptyText);
         let i = 1;
         this.currentList.forEach(elem => {
-            embed.addField(`${i}. ${elem.title}`, elem.description, false);
+            embed.addField({
+                name: `${i}. ${elem.title}`,
+                value: elem.description,
+                inline: false
+            });
             i++;
         });
         return embed;
@@ -105,26 +112,34 @@ class ListMessage
             this.addNumberReaction();
             return;
         }
-        if (this.maxPages !== 1 && this.currentList.length !== 0 &&
-            this.message && !this.message.deleted) {
-            this.nextReaction++;
-            this.message.react(ARROW_EMOJIS[this.nextReaction - 1]).catch(() => {})
-        } else if (this.message && !this.message.deleted) {
-            this.nextReaction = 0;
-            this.emojiListNb = 1;
-            this.addNumberReaction();
+        try {
+            if (this.maxPages !== 1 && this.currentList.length !== 0 &&
+                this.message) {
+                this.nextReaction++;
+                this.message.react(ARROW_EMOJIS[this.nextReaction - 1]).catch(() => {})
+            } else if (this.message) {
+                this.nextReaction = 0;
+                this.emojiListNb = 1;
+                this.addNumberReaction();
+            }
+        } catch (e) {
+            console.error(e);
         }
     }
 
     addNumberReaction()
     {
         if (this.nextReaction > 9) return;
-        if (this.interactive && this.currentList.length !== 0 &&
-            this.message && !this.message.deleted) {
-            if (this.message && !this.message.deleted) {
-                this.nextReaction++;
-                this.message.react(NUMBER_EMOJIS[this.nextReaction - 1]).catch(() => {})
+        try {
+            if (this.interactive && this.currentList.length !== 0 &&
+                this.message) {
+                if (this.message) {
+                    this.nextReaction++;
+                    this.message.react(NUMBER_EMOJIS[this.nextReaction - 1]).catch(() => {})
+                }
             }
+        } catch(e) {
+            console.error(e)
         }
     }
 
@@ -155,8 +170,12 @@ class ListMessage
             }
         })
         collector.on("end", () => {
-            if (this.message && !this.message.deleted)
-                this.message.reactions.removeAll();
+            try {
+                if (this.message)
+                    this.message.reactions.removeAll();
+            } catch(e) {
+                console.error(e)
+            }
         });
     }
 }

@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Client, CommandInteraction, MessageEmbed } from "discord.js";
 import Command from "../util/command";
 import CommandChannelAdd from "./channel/CommandChannelAdd";
 
