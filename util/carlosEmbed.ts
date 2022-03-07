@@ -1,9 +1,9 @@
-import { Colors, Embed } from "discord.js";
+import { ColorResolvable, Colors, Embed } from "discord.js";
 import Bot from "../bot";
 
 export default class CarlOSEmbed extends Embed
 {
-    constructor(color: number) {
+    constructor(color: ColorResolvable) {
         super()
         this.setColor(color)
             .setFooter({text: Bot.client.user.username, iconURL: Bot.client.user.avatarURL()});
