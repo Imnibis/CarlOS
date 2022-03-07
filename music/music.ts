@@ -31,10 +31,10 @@ class Music
 			const process = ytdl(
 				this.video.id,
 				{
-					o: '-',
-					q: true,
-					f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-					r: '100K',
+					output: '-',
+					quiet: true,
+					format: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
+					limitRate: '100K',
 				},
 				{ stdio: ['ignore', 'pipe', 'ignore'] },
 			);

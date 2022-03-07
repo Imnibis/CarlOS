@@ -75,7 +75,7 @@ class ListMessage
             return embed.setDescription(this.emptyText);
         let i = 1;
         this.currentList.forEach(elem => {
-            embed.addField({
+            embed.addFields({
                 name: `${i}. ${elem.title}`,
                 value: elem.description,
                 inline: false

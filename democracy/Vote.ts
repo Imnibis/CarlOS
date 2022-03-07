@@ -116,10 +116,10 @@ export default class Vote
         if (this.description)
             embed.setDescription(this.description);
         this.actions.forEach(action => {
-            embed.addField({name: action.name, value: action.description});
+            embed.addFields({name: action.name, value: action.description});
         })
-        embed.addField({name: "Votes pour", value: this.yesVoters.length.toString(), inline: true});
-        embed.addField({name: "Votes contre", value: this.noVoters.length.toString(), inline: true});
+        embed.addFields({name: "Votes pour", value: this.yesVoters.length.toString(), inline: true});
+        embed.addFields({name: "Votes contre", value: this.noVoters.length.toString(), inline: true});
         return embed;
     }
 
