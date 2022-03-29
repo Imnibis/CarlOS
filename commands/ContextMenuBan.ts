@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ContextMenuCommandBuilder, TextInputBuilder } from "@discordjs/builders";
 import { ApplicationCommandType } from "discord-api-types/v10";
-import { ModalBuilder, GuildMember, UserContextMenuCommandInteraction, ModalSubmitInteraction } from "discord.js";
+import { ModalBuilder, GuildMember, UserContextMenuCommandInteraction, ModalSubmitInteraction, TextInputStyle } from "discord.js";
 import Vote from "../democracy/Vote";
 import CarlOSEmbed from "../util/carlosEmbed";
 import Command from "../util/command";
@@ -25,6 +25,7 @@ class ContextMenuBan implements Command
                             .setLabel("Raison du ban")
                             .setMinLength(1)
                             .setRequired(true)
+                            .setStyle(TextInputStyle.Short)
                             .setCustomId("ban_reason")
                     )
             )
