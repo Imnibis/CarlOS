@@ -130,12 +130,12 @@ export default class Vote
             .addComponents(
                 new Discord.ButtonBuilder()
                     .setCustomId('yesVote')
-                    .setEmoji({name: ':thumbsup:'})
+                    .setEmoji({name: '👍'})
                     .setLabel('Pour')
                     .setStyle(Discord.ButtonStyle.Success),
                 new Discord.ButtonBuilder()
                     .setCustomId('noVote')
-                    .setEmoji({name: ':thumbsdown:'})
+                    .setEmoji({name: '👎'})
                     .setLabel('Contre')
                     .setStyle(Discord.ButtonStyle.Danger)
             );
