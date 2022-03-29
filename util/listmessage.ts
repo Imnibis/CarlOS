@@ -1,4 +1,5 @@
-import { CommandInteraction, Message, Embed, Colors } from "discord.js";
+import { EmbedBuilder } from "@discordjs/builders";
+import { CommandInteraction, Message } from "discord.js";
 import Bot from "../bot";
 import CarlOSEmbed from "./carlosEmbed";
 
@@ -54,13 +55,13 @@ class ListMessage
     {
         try {
             if (this.message)
-                this.message.edit({embeds:[this.getEmbed()]});
+                this.message.edit({embeds:[this.getEmbed().data]});
         } catch (e) {
             console.error(e);
         }
     }
 
-    getEmbed() : Embed
+    getEmbed() : EmbedBuilder
     {
         const embed = CarlOSEmbed.infoEmbed()
             .setTitle(this.title)

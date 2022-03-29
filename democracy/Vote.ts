@@ -1,3 +1,4 @@
+import { ButtonBuilder } from "@discordjs/builders";
 import * as Discord from "discord.js";
 import Bot from "../bot";
 import Guild from "../models/guild.model";
@@ -123,16 +124,16 @@ export default class Vote
         return embed;
     }
 
-    getButtons(): Discord.ActionRow
+    getButtons(): Discord.ActionRowBuilder<Discord.ButtonBuilder>
     {
-        const row = new Discord.ActionRow()
+        const row = new Discord.ActionRowBuilder<ButtonBuilder>()
             .addComponents(
-                new Discord.ButtonComponent()
+                new Discord.ButtonBuilder()
                     .setCustomId('yesVote')
                     .setEmoji({name: ':thumbsup:'})
                     .setLabel('Pour')
                     .setStyle(Discord.ButtonStyle.Success),
-                new Discord.ButtonComponent()
+                new Discord.ButtonBuilder()
                     .setCustomId('noVote')
                     .setEmoji({name: ':thumbsdown:'})
                     .setLabel('Contre')
@@ -168,7 +169,7 @@ export default class Vote
                     this.noVoters.splice(noVoteIndex, 1);
                 else this.noVoters.push(interaction.member as Discord.GuildMember);
             }
-            interaction.update({embeds: [this.getEmbed()], components: [this.getButtons()]})
+            interaction.update({embeds: [this.getEmbed().data], components: [this.getButtons()]})
         })
     }
 }

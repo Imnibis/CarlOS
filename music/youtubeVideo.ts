@@ -3,8 +3,9 @@ import * as youtubeSearch from "youtube-search-api";
 import * as YouTube from "ytube-api";
 import * as moment from "moment";
 const mdfSetup = require("moment-duration-format");
-import { Client, Colors, Embed } from "discord.js";
+import { Client, Colors } from "discord.js";
 import Setting from "../models/setting.model";
+import { EmbedBuilder } from "@discordjs/builders";
 
 mdfSetup(moment);
 
@@ -76,9 +77,9 @@ class YoutubeVideo
         moment.duration(this.duration).format("mm:ss");
     }
 
-    embed(client: Client) : Embed
+    embed(client: Client) : EmbedBuilder
     {
-        const embed = new Embed()
+        const embed = new EmbedBuilder()
             .setColor(Colors.Red)
             .setTitle(this.title)
             .setURL(`https://www.youtube.com/watch?v=${this.id}`)

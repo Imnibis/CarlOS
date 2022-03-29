@@ -1,5 +1,5 @@
-import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, ComponentType, Message, ActionRow, SelectMenuComponent, SelectMenuInteraction, TextChannel, SelectMenuOption } from "discord.js";
+import { ActionRowBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandSubcommandBuilder } from "@discordjs/builders";
+import { CommandInteraction, ComponentType, Message, SelectMenuInteraction, TextChannel } from "discord.js";
 import Guild from "../../models/guild.model";
 import CarlOSEmbed from "../../util/carlosEmbed";
 import { Subcommand } from "../../util/subcommand";
@@ -15,17 +15,17 @@ class CommandDemocracyEnable implements Subcommand
         const guild = await Guild.findOne({where: {id: interaction.guildId}})
         await guild.setSetting('democracy', true);
         const embed = CarlOSEmbed.successEmbed("Démocratie activée!")
-        const selectMenu = new SelectMenuComponent()
+        const selectMenu = new SelectMenuBuilder()
             .setCustomId('selectChannel')
             .setPlaceholder('Sélectionnez le channel de vote');
         interaction.guild.channels.cache.filter(channel => channel.isTextBased()).forEach(channel => {
             selectMenu.addOptions(
-                new SelectMenuOption()
+                new SelectMenuOptionBuilder()
                     .setLabel(`#${channel.name}`)
                     .setValue(channel.id)
             );
         });
-        const row = new ActionRow().addComponents(selectMenu)
+        const row = new ActionRowBuilder<SelectMenuBuilder>().addComponents(selectMenu);
         interaction.reply({embeds: [embed], components: [row]});
         const msg = await interaction.fetchReply() as Message;
         const collector = msg.createMessageComponentCollector({componentType: ComponentType.SelectMenu});

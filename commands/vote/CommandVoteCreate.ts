@@ -1,4 +1,4 @@
-import { SlashCommandSubcommandBuilder } from "@discordjs/builders";
+import { ActionRowBuilder, ButtonBuilder, SlashCommandSubcommandBuilder } from "@discordjs/builders";
 import { ButtonInteraction, GuildMember, Message, ActionRow, ButtonComponent, ChatInputCommandInteraction, ButtonStyle, ComponentType } from "discord.js";
 import Bot from "../../bot";
 import Vote from "../../democracy/Vote";
@@ -35,9 +35,9 @@ class CommandVoteCreate implements Subcommand
             const embed = CarlOSEmbed.infoEmbed()
                 .setTitle("Vote créé !")
                 .setDescription("Votre vote a été créé. Vous pouvez maintenant exécuter toutes les actions nécessaires puis commencer le vote en exécutant /vote begin ou en cliquant sur le bouton ci dessous.")
-            const row = new ActionRow()
+            const row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
-                    new ButtonComponent()
+                    new ButtonBuilder()
                         .setCustomId('beginVote')
                         .setEmoji({name: ':white_check_mark:'})
                         .setLabel('Commencer le vote')
