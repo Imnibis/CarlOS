@@ -4,6 +4,7 @@ import { ApplicationCommandPermissionData, ApplicationCommandPermissionType, Cli
 import Command from "./command";
 import * as fs from "fs";
 import { ContextMenuCommandBuilder, SlashCommandBuilder } from "@discordjs/builders";
+import ModalSubmitEvent from "./modalSubmitEvent";
 
 class CommandManager
 {
@@ -93,6 +94,8 @@ class CommandManager
     static handleInteractionEvent() : void
     {
         this.client.on("interactionCreate", interaction => {
+            if (interaction.isModalSubmit())
+                ModalSubmitEvent.fire(interaction);
             if (!interaction.isCommand())
                 return;
             const commandName = interaction.commandName;
