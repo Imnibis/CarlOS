@@ -23,6 +23,8 @@ class ContextMenuBan implements Command
                     .addComponents(
                         new TextInputBuilder()
                             .setLabel("Raison du ban")
+                            .setMinLength(1)
+                            .setRequired(true)
                             .setCustomId("ban_reason")
                     )
             )
