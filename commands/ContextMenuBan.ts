@@ -14,16 +14,17 @@ class ContextMenuBan implements Command
     
     async run(interaction: UserContextMenuCommandInteraction) {
         const member = interaction.targetMember as GuildMember
-        const guild = interaction.guild;
+        const timestamp = new Date().getTime();
         const modal = new ModalBuilder()
             .setTitle("Ban")
-            .setCustomId("ban_modal")
+            .setCustomId(`ban_modal_${timestamp}`)
             .addComponents(
                 new ActionRowBuilder<TextInputBuilder>()
                     .addComponents(
                         new TextInputBuilder()
                             .setLabel("Raison du ban")
                             .setMinLength(1)
+                            .setMaxLength(100)
                             .setRequired(true)
                             .setStyle(TextInputStyle.Short)
                             .setCustomId("ban_reason")
@@ -34,7 +35,7 @@ class ContextMenuBan implements Command
             interaction.reply({embeds:[embed], ephemeral: true});
         } else {
             await interaction.showModal(modal);
-            ModalSubmitEvent.onSubmit("ban_modal", async (interaction: ModalSubmitInteraction) => {
+            ModalSubmitEvent.onSubmit(`ban_modal_${timestamp}`, async (interaction: ModalSubmitInteraction) => {
                 const reason = interaction.fields.getTextInputValue("ban_reason");
                 Vote.addAction({
                     name: 'Bannissement de membre',
