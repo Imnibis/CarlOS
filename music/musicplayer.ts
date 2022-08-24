@@ -1,4 +1,4 @@
-import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, createAudioResource, demuxProbe, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, createAudioResource, demuxProbe, DiscordGatewayAdapterCreator, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
 import { Client, CommandInteraction, Guild, GuildMember, Embed, VoiceChannel } from "discord.js";
 import CarlOSEmbed from "../util/carlosEmbed";
 import Music from "./music";
@@ -16,7 +16,7 @@ class MusicPlayer
         if (!this.isUserInVoice(member, interaction.guild)) {
             this.sendNotConnectedMessage(client, interaction);
             return false;
-        } else if (interaction.guild.me.voice.channel && !this.isBotIdle(interaction.guild)
+        } else if (interaction.guild.members.me.voice.channel && !this.isBotIdle(interaction.guild)
             && !this.isUserInSameChannel(member, interaction.guild)) {
             this.sendSameChannelMessage(client, interaction);
             return false;
@@ -58,7 +58,7 @@ class MusicPlayer
 
     static isUserInSameChannel(user: GuildMember, guild: Guild) : boolean
     {
-        return user.voice.channelId === guild.me.voice.channelId;
+        return user.voice.channelId === guild.members.me.voice.channelId;
     }
 
     static playNext(guild: Guild) : void
@@ -82,7 +82,7 @@ class MusicPlayer
         const connection = joinVoiceChannel({
             channelId: voiceChannel.id,
             guildId: guild.id,
-            adapterCreator: guild.voiceAdapterCreator
+            adapterCreator: guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator
         });
         let player = this.getAudioPlayer(guild);
         connection.subscribe(player);
